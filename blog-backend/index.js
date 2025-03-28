@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import { graphqlHTTP } from "express-graphql";
-import schema from "./schema.js";
+import schema from "./schema"
 
 const app = express();
 const PORT = process.env.PORT || 4000;
