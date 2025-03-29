@@ -43,11 +43,17 @@ const UserType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
-    post: {
-      type: PostType,
-      args: { id: { type: GraphQLID } },
+    postsByUser: {
+      type: new GraphQLList(PostType),
+      args: { userId: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parent, args) {
-        return Post.findById(args.id);
+        return Post.find({ author: args.userId });
+      },
+    },
+    posts: {
+      type: new GraphQLList(PostType),
+      resolve(parent, args) {
+        return Post.find();
       },
     },
     user: {
