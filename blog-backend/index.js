@@ -1,10 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import { graphqlHTTP } from "express-graphql";
-import schema from "./schema"
+import schema from "./schema/index.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
