@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
-
+import Comment from "../models/Comment.js";
 
 const PostType = new GraphQLObjectType({
   name: "Post",
@@ -36,6 +36,27 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLList(PostType),
       resolve(parent, args) {
         return Post.find({ author: parent.id });
+      },
+    },
+  }),
+});
+
+const CommentType = new GraphQLObjectType({
+  name: "Comment",
+  fields: () => ({
+    id: { type: GraphQLID },
+    text: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
+    author: {
+      type: UserType,
+      resolve(parent, args) {
+        return User.findById(parent.author);
+      },
+    },
+    post: {
+      type: PostType,
+      resolve(parent, args) {
+        return Post.findById(parent.post);
       },
     },
   }),
@@ -106,6 +127,22 @@ const Mutation = new GraphQLObjectType({
           author: args.author,
         });
         return post.save();
+      },
+    },
+    addComment: {
+      type: CommentType,
+      args: {
+        text: { type: new GraphQLNonNull(GraphQLString) },
+        author: { type: new GraphQLNonNull(GraphQLID) },
+        post: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        const comment = new Comment({
+          text: args.text,
+          author: args.author,
+          post: args.post,
+        });
+        return comment.save();
       },
     },
   },
