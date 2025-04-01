@@ -91,6 +91,19 @@ const RootQuery = new GraphQLObjectType({
         return User.find();
       },
     },
+    comments: {
+      type: new GraphQLList(CommentType),
+      resolve(parent, args) {
+        return Comment.find();
+      },
+    },
+    commentsByPost: {
+      type: new GraphQLList(CommentType),
+      args: { postId: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(parent, args) {
+        return Comment.find({ post: args.postId });
+      },
+    },
   },
 });
 
