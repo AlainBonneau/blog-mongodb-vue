@@ -9,6 +9,7 @@ import {
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
+
 const PostType = new GraphQLObjectType({
   name: "Post",
   fields: () => ({
