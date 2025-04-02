@@ -1,3 +1,6 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 import {
   GraphQLObjectType,
   GraphQLSchema,
@@ -104,6 +107,15 @@ const RootQuery = new GraphQLObjectType({
         return Comment.find({ post: args.postId });
       },
     },
+    me: {
+      type: UserType,
+      resolve(_, __, context) {
+        if (!context.user) {
+          throw new Error("Non connecté");
+        }
+        return User.findById(context.user);
+      },
+    },
   },
 });
 
@@ -132,14 +144,18 @@ const Mutation = new GraphQLObjectType({
       args: {
         title: { type: new GraphQLNonNull(GraphQLString) },
         content: { type: new GraphQLNonNull(GraphQLString) },
-        author: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args) {
+      resolve(_, args, context) {
+        if (!context.user) {
+          throw new Error("Non autorisé");
+        }
+
         const post = new Post({
           title: args.title,
           content: args.content,
-          author: args.author,
+          author: context.user,
         });
+
         return post.save();
       },
     },
@@ -148,15 +164,19 @@ const Mutation = new GraphQLObjectType({
       type: CommentType,
       args: {
         text: { type: new GraphQLNonNull(GraphQLString) },
-        author: { type: new GraphQLNonNull(GraphQLID) },
         post: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args) {
+      resolve(_, args, context) {
+        if (!context.user) {
+          throw new Error("Non autorisé");
+        }
+
         const comment = new Comment({
           text: args.text,
-          author: args.author,
+          author: context.user,
           post: args.post,
         });
+
         return comment.save();
       },
     },
