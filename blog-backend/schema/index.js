@@ -126,6 +126,7 @@ const Mutation = new GraphQLObjectType({
         return user.save();
       },
     },
+
     addPost: {
       type: PostType,
       args: {
@@ -142,6 +143,7 @@ const Mutation = new GraphQLObjectType({
         return post.save();
       },
     },
+
     addComment: {
       type: CommentType,
       args: {
@@ -158,10 +160,57 @@ const Mutation = new GraphQLObjectType({
         return comment.save();
       },
     },
+
+    login: {
+      type: GraphQLString,
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        const user = await User.findOne({ email: args.email });
+        if (!user) throw new Error("Utilisateur non trouvé");
+
+        const isMatch = await bcrypt.compare(args.password, user.password);
+        if (!isMatch) throw new Error("Mot de passe incorrect");
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+          expiresIn: "7d",
+        });
+
+        return token;
+      },
+    },
+
+    register: {
+      type: GraphQLString,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, args) {
+        const existing = await User.findOne({ email: args.email });
+        if (existing) throw new Error("Email déjà utilisé");
+
+        const hashedPassword = await bcrypt.hash(args.password, 10);
+        const user = await new User({
+          name: args.name,
+          email: args.email,
+          password: hashedPassword,
+        }).save();
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+          expiresIn: "7d",
+        });
+
+        return token;
+      },
+    },
   },
 });
 
-export default new GraphQLSchema({
+export const schema = new GraphQLSchema({
   query: RootQuery,
   mutation: Mutation,
 });
