@@ -8,6 +8,7 @@ import {
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLInt,
 } from "graphql";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
@@ -75,12 +76,19 @@ const RootQuery = new GraphQLObjectType({
         return Post.find({ author: args.userId });
       },
     },
+
     posts: {
       type: new GraphQLList(PostType),
-      resolve(parent, args) {
-        return Post.find();
+      args: {
+        limit: { type: GraphQLInt },
+        offset: { type: GraphQLInt },
+      },
+      resolve(_, args) {
+        const { limit = 5, offset = 0 } = args;
+        return Post.find().skip(offset).limit(limit).sort({ createdAt: -1 });
       },
     },
+
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
@@ -88,18 +96,21 @@ const RootQuery = new GraphQLObjectType({
         return User.findById(args.id);
       },
     },
+
     users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
         return User.find();
       },
     },
+
     comments: {
       type: new GraphQLList(CommentType),
       resolve(parent, args) {
         return Comment.find();
       },
     },
+
     commentsByPost: {
       type: new GraphQLList(CommentType),
       args: { postId: { type: new GraphQLNonNull(GraphQLID) } },
@@ -107,6 +118,7 @@ const RootQuery = new GraphQLObjectType({
         return Comment.find({ post: args.postId });
       },
     },
+
     me: {
       type: UserType,
       resolve(_, __, context) {
