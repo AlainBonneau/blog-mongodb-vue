@@ -13,21 +13,7 @@ import {
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
-
-const PostType = new GraphQLObjectType({
-  name: "Post",
-  fields: () => ({
-    id: { type: GraphQLID },
-    title: { type: GraphQLString },
-    content: { type: GraphQLString },
-    author: {
-      type: UserType,
-      resolve(parent, args) {
-        return User.findById(parent.author);
-      },
-    },
-  }),
-});
+import Category from "../models/Category.js";
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -61,6 +47,35 @@ const CommentType = new GraphQLObjectType({
       type: PostType,
       resolve(parent, args) {
         return Post.findById(parent.post);
+      },
+    },
+  }),
+});
+
+const CategoryType = new GraphQLObjectType({
+  name: "Category",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+
+const PostType = new GraphQLObjectType({
+  name: "Post",
+  fields: () => ({
+    id: { type: GraphQLID },
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
+    author: {
+      type: UserType,
+      resolve(parent, args) {
+        return User.findById(parent.author);
+      },
+    },
+    category: {
+      type: CategoryType,
+      resolve(parent) {
+        return Category.findById(parent.category);
       },
     },
   }),
@@ -151,11 +166,25 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
+    addCategory: {
+      type: CategoryType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(_, args) {
+        const category = new Category({
+          name: args.name,
+        });
+        return category.save();
+      },
+    },
+
     addPost: {
       type: PostType,
       args: {
         title: { type: new GraphQLNonNull(GraphQLString) },
         content: { type: new GraphQLNonNull(GraphQLString) },
+        category: { type: GraphQLID },
       },
       resolve(_, args, context) {
         if (!context.user) {
@@ -165,6 +194,7 @@ const Mutation = new GraphQLObjectType({
         const post = new Post({
           title: args.title,
           content: args.content,
+          category: args.category,
           author: context.user,
         });
 
@@ -190,6 +220,21 @@ const Mutation = new GraphQLObjectType({
         });
 
         return comment.save();
+      },
+    },
+
+    categories: {
+      type: new GraphQLList(CategoryType),
+      resolve() {
+        return Category.find();
+      },
+    },
+
+    postsByCategory: {
+      type: new GraphQLList(PostType),
+      args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(_, args) {
+        return Post.find({ category: args.categoryId });
       },
     },
 
