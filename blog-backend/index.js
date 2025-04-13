@@ -4,8 +4,17 @@ import dotenv from "dotenv";
 import { createHandler } from "graphql-http/lib/use/express";
 import { schema } from "./schema/index.js";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 
 dotenv.config();
+
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  methods: ["GET", "POST"],
+};
+
+const corsMiddleware = cors(corsOptions);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,6 +26,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 mongoose.connection.once("open", () => {
   console.log("✅ Connected to MongoDB");
 });
+
+app.use(corsMiddleware);
 
 app.use(
   "/graphql",
