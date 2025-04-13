@@ -4,7 +4,7 @@ import HeroSection from "./components/HeroSection.vue";
 </script>
 
 <template>
-  <div class="min-h-screen bg-blue-50 text-gray-800 font-sans">
+  <div class="min-h-screen bg-blue-100 text-gray-800 font-sans">
     <Navbar />
 
     <!-- Section d’accueil -->
@@ -12,7 +12,7 @@ import HeroSection from "./components/HeroSection.vue";
       class="max-w-6xl mx-auto px-4 py-20 flex flex-col md:flex-row items-center"
     >
       <div class="flex-1 space-y-6">
-        <h2 class="text-4xl md:text-5xl font-bold text-blue-900">
+        <h2 class="text-4xl md:text-5xl font-serif text-blue-900">
           Bienvenue sur le blog
         </h2>
         <p class="text-lg text-blue-900">
