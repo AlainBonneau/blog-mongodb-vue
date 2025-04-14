@@ -5,4 +5,11 @@
 @theme {
   --font-sans: "Inter", sans-serif;
   --font-serif: "Playfair Display", serif;
+
+  --color-whitebg: #e0edfe;
+  --color-wprimary: #224d94;
+  --color-wtext: #c0c0c0;
+
+  --color-blackbg: #121212;
+  --color-bprimary: #23272f;
 }
