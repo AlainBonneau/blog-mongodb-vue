@@ -14,6 +14,7 @@ onMounted(async () => {
     id
     title
     content
+    image
   }
 }
 `,
@@ -29,12 +30,15 @@ onMounted(async () => {
 
 <template>
   <section class="max-w-6xl mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">Articles récents</h2>
+    <h2 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">
+      Articles récents
+    </h2>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <ArticlePreview
         v-for="(article, index) in articles"
         :key="article.id"
         :title="article.title"
+        :image="article.image"
         :excerpt="article.content.slice(0, 100) + '...'"
         :link="`/articles/${article.id}`"
       />

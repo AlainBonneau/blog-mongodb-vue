@@ -20,6 +20,7 @@ const loadArticles = async () => {
           id
           title
           content
+          image
         }
       }
     `,
@@ -48,6 +49,7 @@ watch(page, () => {
         v-for="article in articles"
         :key="article.id"
         :title="article.title"
+        :image="article.image"
         :excerpt="article.content.slice(0, 100) + '...'"
         :link="`/articles/${article.id}`"
       />

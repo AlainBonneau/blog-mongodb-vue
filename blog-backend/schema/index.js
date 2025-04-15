@@ -72,6 +72,7 @@ const PostType = new GraphQLObjectType({
         return User.findById(parent.author);
       },
     },
+    image: { type: GraphQLString },
     category: {
       type: CategoryType,
       resolve(parent) {
@@ -127,6 +128,21 @@ const RootQuery = new GraphQLObjectType({
       },
     },
 
+    categories: {
+      type: new GraphQLList(CategoryType),
+      resolve() {
+        return Category.find();
+      },
+    },
+
+    postsByCategory: {
+      type: new GraphQLList(PostType),
+      args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(_, args) {
+        return Post.find({ category: args.categoryId });
+      },
+    },
+
     comments: {
       type: new GraphQLList(CommentType),
       resolve(parent, args) {
@@ -157,23 +173,6 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
-    addUser: {
-      type: UserType,
-      args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        email: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve(parent, args) {
-        const user = new User({
-          name: args.name,
-          email: args.email,
-          password: args.password,
-        });
-        return user.save();
-      },
-    },
-
     addCategory: {
       type: CategoryType,
       args: {
@@ -192,6 +191,7 @@ const Mutation = new GraphQLObjectType({
       args: {
         title: { type: new GraphQLNonNull(GraphQLString) },
         content: { type: new GraphQLNonNull(GraphQLString) },
+        image: { type: GraphQLString },
         category: { type: GraphQLID },
       },
       resolve(_, args, context) {
@@ -202,6 +202,9 @@ const Mutation = new GraphQLObjectType({
         const post = new Post({
           title: args.title,
           content: args.content,
+          image:
+            args.image ||
+            "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg",
           category: args.category,
           author: context.user,
         });
@@ -228,21 +231,6 @@ const Mutation = new GraphQLObjectType({
         });
 
         return comment.save();
-      },
-    },
-
-    categories: {
-      type: new GraphQLList(CategoryType),
-      resolve() {
-        return Category.find();
-      },
-    },
-
-    postsByCategory: {
-      type: new GraphQLList(PostType),
-      args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve(_, args) {
-        return Post.find({ category: args.categoryId });
       },
     },
 
