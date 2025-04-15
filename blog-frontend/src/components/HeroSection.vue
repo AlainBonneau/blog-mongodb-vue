@@ -11,7 +11,7 @@
         sujets. Explorez, apprenez et grandissez avec nous.
       </p>
       <button
-        class="bg-wprimary dark:bg-bprimary text-wtext px-6 py-3 rounded-lg shadow hover:bg-blue-900 cursor-pointer transition duration-300"
+        class="bg-wprimary dark:bg-bprimary text-white px-6 py-3 rounded-lg shadow hover:bg-blue-900 cursor-pointer transition duration-300"
       >
         Commencer la lecture
       </button>

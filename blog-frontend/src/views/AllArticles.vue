@@ -41,7 +41,7 @@ watch(page, () => {
 
 <template>
   <div class="max-w-6xl mx-auto px-4 py-20">
-    <h1 class="text-3xl font-bold text-blue-900 mb-8">Tous les articles</h1>
+    <h1 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">Tous les articles</h1>
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
       <ArticlePreview
@@ -58,11 +58,11 @@ watch(page, () => {
       <button
         @click="page > 1 && page--"
         :disabled="page <= 1"
-        class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded disabled:opacity-50"
       >
         Précédent
       </button>
-      <button @click="page++" class="bg-blue-600 text-white px-4 py-2 rounded">
+      <button @click="page++" class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded">
         Suivant
       </button>
     </div>

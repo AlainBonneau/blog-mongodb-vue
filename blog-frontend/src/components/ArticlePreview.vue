@@ -8,7 +8,7 @@ defineProps({
 
 <template>
   <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition">
-    <h3 class="text-xl font-bold text-blue-800 mb-2">{{ title }}</h3>
+    <h3 class="text-xl font-bold text-wprimary  mb-2">{{ title }}</h3>
     <p class="text-gray-700 mb-4">
       {{ excerpt }}
     </p>
