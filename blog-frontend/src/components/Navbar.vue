@@ -15,15 +15,15 @@
       <div class="flex gap-2 items-center">
         <button
           @click="toggleDarkMode"
-          class="bg-white text-[var(--color-wprimary)] font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-[var(--color-blackbg)] dark:text-[var(--color-whitebg)]"
+          class="bg-white text-wprimary font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-[var(--color-blackbg)] dark:text-whitebg"
         >
           {{ isDarkMode ? "☀️ Clair" : "🌙 Sombre" }}
         </button>
 
         <button
-          class="bg-white text-[var(--color-wprimary)] font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-[var(--color-blackbg)] dark:text-[var(--color-whitebg)]"
+          class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
         >
-          Abonnez-vous
+          Connexion
         </button>
       </div>
     </div>

@@ -34,9 +34,9 @@ onMounted(async () => {
 <template>
   <div class="max-w-4xl mx-auto px-4 py-20">
     <div v-if="article">
-      <h1 class="text-4xl font-bold text-blue-900 mb-6">{{ article.title }}</h1>
+      <h1 class="text-4xl font-bold text-wprimary dark:text-wtext mb-6">{{ article.title }}</h1>
       <img :src="article.image" alt="Article Image" class="w-full h-64 object-cover rounded mb-6" />
-      <p class="text-gray-800 leading-relaxed whitespace-pre-line">
+      <p class="text-black dark:text-white leading-relaxed whitespace-pre-line">
         {{ article.content }}
       </p>
     </div>
