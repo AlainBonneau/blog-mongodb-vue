@@ -20,11 +20,23 @@
           {{ isDarkMode ? "☀️ Clair" : "🌙 Sombre" }}
         </button>
 
-        <button
-          class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
-        >
-          Connexion
-        </button>
+        <div v-if="auth.isLoggedIn">
+          <button
+            @click="handleLogout"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
+          >
+            Déconnexion
+          </button>
+        </div>
+
+        <div v-else>
+          <RouterLink
+            to="/login"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
+          >
+            Connexion
+          </RouterLink>
+        </div>
       </div>
     </div>
   </header>
@@ -32,8 +44,10 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 const isDarkMode = ref(false);
+const auth = useAuthStore();
 
 onMounted(() => {
   isDarkMode.value = localStorage.getItem("darkMode") === "true";
@@ -44,6 +58,11 @@ function toggleDarkMode() {
   isDarkMode.value = !isDarkMode.value;
   localStorage.setItem("darkMode", isDarkMode.value);
   updateHtmlClass();
+}
+
+function handleLogout() {
+  auth.logout();
+  window.location.href = "/";
 }
 
 function updateHtmlClass() {
