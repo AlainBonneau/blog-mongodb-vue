@@ -3,8 +3,12 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import "./style.css";
 import router from "./router";
+import { apolloClient } from "./apollo"; // 👈
+import { DefaultApolloClient } from "@vue/apollo-composable"; // 👈
 
-const pinia = createPinia();
-App.use(pinia);
+const app = createApp(App);
 
-createApp(App).use(router).mount("#app");
+app.provide(DefaultApolloClient, apolloClient); // 👈 injecte le client Apollo
+app.use(router);
+app.use(createPinia());
+app.mount("#app");
