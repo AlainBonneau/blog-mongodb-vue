@@ -1,79 +1,73 @@
 <template>
   <div
-    class="max-w-md mx-auto mt-10 p-6 bg-whitebg dark:bg-blackbg rounded-lg shadow-lg transition-all"
+    class="flex justify-center items-center min-h-screen bg-whitebg dark:bg-blackbg px-4"
   >
-    <h2
-      class="text-2xl font-bold mb-6 text-wprimary dark:text-wtext text-center"
+    <div
+      class="w-full max-w-md bg-wprimary dark:bg-bprimary rounded-2xl shadow-xl p-8 transition-all"
     >
-      {{ isLoginMode ? "Connexion" : "Inscription" }}
-    </h2>
-
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-      <div v-if="!isLoginMode">
-        <label
-          class="block text-sm font-medium text-wprimary dark:text-wtext mb-1"
-        >
-          Nom
-        </label>
-        <input
-          v-model="form.name"
-          type="text"
-          placeholder="Ton nom"
-          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-wprimary dark:bg-bprimary dark:text-white"
-        />
-      </div>
-
-      <div>
-        <label
-          class="block text-sm font-medium text-wprimary dark:text-wtext mb-1"
-        >
-          Email
-        </label>
-        <input
-          v-model="form.email"
-          type="email"
-          placeholder="ton@email.com"
-          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-wprimary dark:bg-bprimary dark:text-white"
-        />
-      </div>
-
-      <div>
-        <label
-          class="block text-sm font-medium text-wprimary dark:text-wtext mb-1"
-        >
-          Mot de passe
-        </label>
-        <input
-          v-model="form.password"
-          type="password"
-          placeholder="••••••••"
-          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-wprimary dark:bg-bprimary dark:text-white"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="w-full bg-wprimary text-white py-2 px-4 rounded-md hover:bg-opacity-90 transition"
+      <h2
+        class="text-3xl font-serif font-bold text-white dark:text-wtext text-center mb-6 tracking-tight"
       >
-        {{ isLoginMode ? "Se connecter" : "S'inscrire" }}
-      </button>
+        {{ isLoginMode ? "Connexion" : "Inscription" }}
+      </h2>
 
-      <p v-if="errorMessage" class="text-red-600 text-sm text-center">
-        {{ errorMessage }}
-      </p>
-    </form>
+      <form @submit.prevent="handleSubmit" class="space-y-5">
+        <div v-if="!isLoginMode">
+          <label class="block text-sm font-medium text-wtext mb-1">Nom</label>
+          <input
+            v-model="form.name"
+            type="text"
+            placeholder="Ton nom"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white dark:bg-blackbg text-wprimary dark:text-wtext focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-whitebg"
+          />
+        </div>
 
-    <div class="mt-6 text-center">
-      <button
-        @click="isLoginMode = !isLoginMode"
-        class="text-sm text-wprimary dark:text-wtext hover:underline transition"
-      >
-        {{
-          isLoginMode
-            ? "Pas encore de compte ? S'inscrire"
-            : "Déjà inscrit ? Se connecter"
-        }}
-      </button>
+        <div>
+          <label class="block text-sm font-medium text-wtext mb-1">Email</label>
+          <input
+            v-model="form.email"
+            type="email"
+            placeholder="ton@email.com"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white dark:bg-blackbg text-wprimary dark:text-wtext focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-whitebg"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-wtext mb-1"
+            >Mot de passe</label
+          >
+          <input
+            v-model="form.password"
+            type="password"
+            placeholder="••••••••"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white dark:bg-blackbg text-wprimary dark:text-wtext focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-whitebg"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-whitebg text-wprimary font-semibold py-2 rounded-lg hover:bg-wtext hover:text-wprimary transition cursor-pointer"
+        >
+          {{ isLoginMode ? "Se connecter" : "S'inscrire" }}
+        </button>
+
+        <p v-if="errorMessage" class="text-red-200 text-sm text-center">
+          {{ errorMessage }}
+        </p>
+      </form>
+
+      <div class="mt-6 text-center">
+        <button
+          @click="isLoginMode = !isLoginMode"
+          class="text-sm text-white dark:text-wtext hover:underline transition cursor-pointer"
+        >
+          {{
+            isLoginMode
+              ? "Pas encore de compte ? S'inscrire"
+              : "Déjà inscrit ? Se connecter"
+          }}
+        </button>
+      </div>
     </div>
   </div>
 </template>

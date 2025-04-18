@@ -15,7 +15,7 @@
       <div class="flex gap-2 items-center">
         <button
           @click="toggleDarkMode"
-          class="bg-white text-wprimary font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-[var(--color-blackbg)] dark:text-whitebg"
+          class="bg-white text-wprimary font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg cursor-pointer "
         >
           {{ isDarkMode ? "☀️ Clair" : "🌙 Sombre" }}
         </button>
@@ -23,7 +23,7 @@
         <div v-if="auth.isLoggedIn">
           <button
             @click="handleLogout"
-            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg cursor-pointer"
           >
             Déconnexion
           </button>
@@ -32,7 +32,7 @@
         <div v-else>
           <RouterLink
             to="/login"
-            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-whitebg"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg cursor-pointer"
           >
             Connexion
           </RouterLink>
