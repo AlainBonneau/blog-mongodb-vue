@@ -152,9 +152,16 @@ const RootQuery = new GraphQLObjectType({
 
     commentsByPost: {
       type: new GraphQLList(CommentType),
-      args: { postId: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve(parent, args) {
-        return Comment.find({ post: args.postId });
+      args: {
+        postId: { type: new GraphQLNonNull(GraphQLID) },
+        limit: { type: GraphQLInt },
+        offset: { type: GraphQLInt },
+      },
+      resolve(_, { postId, limit = 5, offset = 0 }) {
+        return Comment.find({ post: postId })
+          .skip(offset)
+          .limit(limit)
+          .sort({ createdAt: -1 });
       },
     },
 
