@@ -201,9 +201,12 @@ const Mutation = new GraphQLObjectType({
         image: { type: GraphQLString },
         category: { type: GraphQLID },
       },
-      resolve(_, args, context) {
-        if (!context.user) {
-          throw new Error("Non autorisé");
+      async resolve(_, args, context) {
+        if (!context.user) throw new Error("Non connecté");
+
+        const currentUser = await User.findById(context.user);
+        if (!currentUser || currentUser.role !== "auteur") {
+          throw new Error("Accès réservé aux auteurs");
         }
 
         const post = new Post({
@@ -213,7 +216,7 @@ const Mutation = new GraphQLObjectType({
             args.image ||
             "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg",
           category: args.category,
-          author: context.user,
+          author: currentUser.id,
         });
 
         return post.save();
@@ -268,6 +271,7 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
+        role: "utilisateur",
       },
       async resolve(_, args) {
         const existing = await User.findOne({ email: args.email });
