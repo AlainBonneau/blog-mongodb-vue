@@ -257,9 +257,11 @@ const Mutation = new GraphQLObjectType({
         const isMatch = await bcrypt.compare(args.password, user.password);
         if (!isMatch) throw new Error("Mot de passe incorrect");
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "7d",
-        });
+        const token = jwt.sign(
+          { userId: user.id, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "7d" }
+        );
 
         return token;
       },
@@ -271,7 +273,7 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
-        role: "utilisateur",
+        role: { type: GraphQLString },
       },
       async resolve(_, args) {
         const existing = await User.findOne({ email: args.email });
@@ -281,12 +283,15 @@ const Mutation = new GraphQLObjectType({
         const user = await new User({
           name: args.name,
           email: args.email,
+          role: args.role || "utilisateur",
           password: hashedPassword,
         }).save();
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "7d",
-        });
+        const token = jwt.sign(
+          { userId: user.id, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "7d" }
+        );
 
         return token;
       },

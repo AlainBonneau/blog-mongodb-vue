@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import AllArticles from "../views/AllArticles.vue";
 import ArticleDetail from "../views/ArticleDetail.vue";
 import LoginRegister from "../views/LoginRegister.vue";
+import AddArticle from "../views/AddArticle.vue";
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: "/login",
     name: "LoginRegister",
     component: LoginRegister,
+  },
+  {
+    path: "/nouvel-article",
+    name: "NewArticle",
+    component: AddArticle,
   },
 ];
 
