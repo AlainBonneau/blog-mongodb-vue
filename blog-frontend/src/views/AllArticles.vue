@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
 import ArticlePreview from "../components/ArticlePreview.vue";
 
 const route = useRoute();
 const router = useRouter();
+const auth = useAuthStore();
 
 const articles = ref([]);
 const limit = 6;
@@ -42,7 +44,18 @@ watch(page, () => {
 
 <template>
   <div class="max-w-6xl mx-auto px-4 py-20">
-    <h1 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">Tous les articles</h1>
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">
+        Tous les articles
+      </h1>
+      <!-- Ne pas oublier de rajouter les condition d'être sois admin sois auteur -->
+      <a
+        v-if="auth.isLoggedIn"
+        href="/nouvel-article"
+        class="p-4 bg-wprimary text-white font-semibold px-3 py-2 rounded dark:bg-white dark:text-black cursor-pointer"
+        >Créer un article</a
+      >
+    </div>
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
       <ArticlePreview
@@ -64,7 +77,10 @@ watch(page, () => {
       >
         Précédent
       </button>
-      <button @click="page++" class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded">
+      <button
+        @click="page++"
+        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded"
+      >
         Suivant
       </button>
     </div>
