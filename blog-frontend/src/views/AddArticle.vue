@@ -11,9 +11,7 @@
     <form @submit.prevent="handleSubmit" class="space-y-7">
       <!-- Titre -->
       <div>
-        <label class="block mb-1 font-bold text-wtext"
-          >Titre</label
-        >
+        <label class="block mb-1 font-bold text-wtext">Titre*</label>
         <input
           v-model="form.title"
           type="text"
@@ -25,9 +23,7 @@
 
       <!-- Contenu -->
       <div>
-        <label class="block mb-1 font-bold text-wtext"
-          >Contenu</label
-        >
+        <label class="block mb-1 font-bold text-wtext">Contenu*</label>
         <textarea
           v-model="form.content"
           rows="7"
@@ -39,9 +35,7 @@
 
       <!-- Image -->
       <div>
-        <label class="block mb-1 font-bold text-wtext"
-          >Image (URL)</label
-        >
+        <label class="block mb-1 font-bold text-wtext">Image (URL)</label>
         <input
           v-model="form.image"
           type="text"
@@ -59,9 +53,7 @@
 
       <!-- Catégorie -->
       <div>
-        <label class="block mb-1 font-bold text-wtext"
-          >Catégorie</label
-        >
+        <label class="block mb-1 font-bold text-wtext">Catégorie*</label>
         <select
           v-model="form.category"
           class="w-full px-4 py-3 border border-wprimary/30 rounded-xl bg-white dark:bg-bprimary dark:text-wtext focus:outline-none focus:ring-2 focus:ring-wprimary focus:border-wprimary transition"
@@ -97,6 +89,15 @@ import { useRouter } from "vue-router";
 
 const auth = useAuthStore();
 const router = useRouter();
+
+if (!auth.isLoggedIn) {
+  router.push("/login");
+}
+
+// Ne pas oublier de changer une fois les role créer
+// if (auth.user.role !== "admin" && auth.user.role !== "editor") {
+//   router.push("/");
+// }
 
 const form = ref({ title: "", content: "", image: "", category: "" });
 const message = ref("");
