@@ -8,8 +8,12 @@
 
   --color-whitebg: #e0edfe;
   --color-wprimary: #224d94;
-  --color-wtext: #D1D5DB;
+  --color-wtext: #d1d5db;
 
-  --color-blackbg: #23272F;
+  --color-blackbg: #23272f;
   --color-bprimary: #1a1a1a;
+}
+
+html {
+  max-height: 100vh;
 }
