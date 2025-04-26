@@ -113,6 +113,7 @@ const REGISTER_MUTATION = gql`
 const { mutate: login } = useMutation(LOGIN_MUTATION);
 const { mutate: register } = useMutation(REGISTER_MUTATION);
 
+// Fonction pour gérer la soumission du formulaire
 const handleSubmit = async () => {
   errorMessage.value = "";
   try {
