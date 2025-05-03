@@ -223,6 +223,36 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
+    deletePost: {
+      type: GraphQLString,
+      args: {
+        postId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, { postId }, context) {
+        if (!context.user) {
+          throw new Error("Non connecté");
+        }
+
+        const currentUser = await User.findById(context.user);
+        const post = await Post.findById(postId);
+
+        if (!post) {
+          throw new Error("Article introuvable");
+        }
+
+        // Règle de permission
+        const isAuthor = post.author.toString() === currentUser.id;
+        const isAdmin = currentUser.role === "admin";
+
+        if (!isAuthor && !isAdmin) {
+          throw new Error("Non autorisé à supprimer cet article");
+        }
+
+        await Post.findByIdAndDelete(postId);
+        return "Article supprimé";
+      },
+    },
+    
     addComment: {
       type: CommentType,
       args: {
