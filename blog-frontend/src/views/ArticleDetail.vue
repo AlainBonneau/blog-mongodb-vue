@@ -12,6 +12,21 @@
         :alt="post.title"
         class="w-full h-64 object-cover rounded-lg mb-6"
       />
+      <div
+        v-if="
+          auth.user &&
+          (auth.user.userId === post.author?.id || auth.user.role === 'admin')
+        "
+        class="mt-6 text-right"
+      >
+        <button
+          @click="handleDelete"
+          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+        >
+          Supprimer l’article
+        </button>
+      </div>
+
       <h1 class="text-3xl font-bold text-wprimary dark:text-wtext mb-2">
         {{ post.title }}
       </h1>
@@ -91,12 +106,13 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useQuery, useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { ref, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 
+const router = useRouter();
 const route = useRoute();
 const postId = route.params.id;
 const auth = useAuthStore();
@@ -113,6 +129,7 @@ const GET_POST = gql`
         name
       }
       author {
+        id
         name
       }
     }
@@ -179,6 +196,27 @@ const handleAddComment = async () => {
     await refetchComments();
   } catch (err) {
     console.error("Erreur ajout commentaire :", err);
+  }
+};
+
+// Delete post
+const DELETE_POST = gql`
+  mutation DeletePost($postId: ID!) {
+    deletePost(postId: $postId)
+  }
+`;
+
+const { mutate: deletePost } = useMutation(DELETE_POST);
+
+const handleDelete = async () => {
+  const confirmDelete = confirm("Tu es sûr de vouloir supprimer cet article ?");
+  if (!confirmDelete) return;
+
+  try {
+    await deletePost({ postId });
+    router.push("/");
+  } catch (err) {
+    alert("Erreur lors de la suppression : " + err.message);
   }
 };
 </script>
