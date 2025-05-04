@@ -214,7 +214,7 @@ const handleDelete = async () => {
 
   try {
     await deletePost({ postId });
-    router.push("/");
+    router.push("/articles");
   } catch (err) {
     alert("Erreur lors de la suppression : " + err.message);
   }

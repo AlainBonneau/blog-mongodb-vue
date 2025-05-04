@@ -145,7 +145,7 @@ const handleSubmit = async () => {
     });
     message.value = "Article publié avec succès ! 🚀";
     setTimeout(() => {
-      router.push("/");
+      router.push("/articles");
     }, 1300);
   } catch (err) {
     message.value = "Erreur : " + err.message;
