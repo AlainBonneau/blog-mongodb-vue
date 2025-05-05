@@ -5,7 +5,7 @@
       Erreur : {{ error.message }}
     </div>
 
-    <article v-else class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-md">
+    <article v-else class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl">
       <img
         v-if="post.image"
         :src="post.image"
