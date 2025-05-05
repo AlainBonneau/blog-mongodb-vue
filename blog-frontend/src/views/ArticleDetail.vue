@@ -5,7 +5,10 @@
       Erreur : {{ error.message }}
     </div>
 
-    <article v-else class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl">
+    <article
+      v-else
+      class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl"
+    >
       <img
         v-if="post.image"
         :src="post.image"
@@ -64,6 +67,13 @@
             <span class="block mt-2 text-xs text-gray-500">
               Par {{ comment.author?.name || "Anonyme" }}
             </span>
+            <button
+              v-if="auth.user?.role === 'admin'"
+              @click="handleDeleteComment(comment.id)"
+              class="text-red-500 text-xs mt-1 hover:underline"
+            >
+              🗑 Supprimer
+            </button>
           </li>
         </ul>
 
@@ -217,6 +227,27 @@ const handleDelete = async () => {
     router.push("/articles");
   } catch (err) {
     alert("Erreur lors de la suppression : " + err.message);
+  }
+};
+
+// Delete comment
+const DELETE_COMMENT = gql`
+  mutation DeleteComment($commentId: ID!) {
+    deleteComment(commentId: $commentId)
+  }
+`;
+
+const { mutate: deleteComment } = useMutation(DELETE_COMMENT);
+
+const handleDeleteComment = async (commentId) => {
+  const ok = confirm("Supprimer ce commentaire ?");
+  if (!ok) return;
+
+  try {
+    await deleteComment({ commentId });
+    await refetchComments();
+  } catch (err) {
+    alert("Erreur : " + err.message);
   }
 };
 </script>
