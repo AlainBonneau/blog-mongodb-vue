@@ -24,7 +24,7 @@
       >
         <button
           @click="handleDelete"
-          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer"
         >
           Supprimer l’article
         </button>
@@ -70,7 +70,7 @@
             <button
               v-if="auth.user?.role === 'admin'"
               @click="handleDeleteComment(comment.id)"
-              class="text-red-500 text-xs mt-1 hover:underline"
+              class="text-red-500 text-xs mt-1 hover:underline cursor-pointer"
             >
               🗑 Supprimer
             </button>
