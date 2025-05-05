@@ -252,7 +252,7 @@ const Mutation = new GraphQLObjectType({
         return "Article supprimé";
       },
     },
-    
+
     addComment: {
       type: CommentType,
       args: {
@@ -271,6 +271,31 @@ const Mutation = new GraphQLObjectType({
         });
 
         return comment.save();
+      },
+    },
+
+    deleteComment: {
+      type: GraphQLString,
+      args: {
+        commentId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, { commentId }, context) {
+        if (!context.user) {
+          throw new Error("Non connecté");
+        }
+
+        const user = await User.findById(context.user);
+        if (user.role !== "admin") {
+          throw new Error("Non autorisé");
+        }
+
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+          throw new Error("Commentaire introuvable");
+        }
+
+        await Comment.findByIdAndDelete(commentId);
+        return "Commentaire supprimé";
       },
     },
 
