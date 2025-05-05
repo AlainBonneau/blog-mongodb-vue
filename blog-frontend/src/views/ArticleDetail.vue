@@ -1,3 +1,9 @@
+<script>
+import CommentItem from "../components/comments/CommentItem.vue";
+import CommentForm from "../components/comments/CommentForm.vue";
+import CommentList from "../components/comments/CommentList.vue";
+</script>
+
 <template>
   <section class="max-w-4xl mx-auto px-4 py-16">
     <div v-if="loading" class="text-center text-wprimary">Chargement...</div>
@@ -51,64 +57,23 @@
 
       <!-- 💬 Commentaires -->
       <section>
-        <h3 class="text-xl font-bold text-wprimary dark:text-wtext mb-4">
-          Commentaires
-        </h3>
-
-        <ul class="space-y-4 mb-6">
-          <li
-            v-for="comment in comments"
-            :key="comment.id"
-            class="bg-white dark:bg-bprimary rounded p-4 shadow"
-          >
-            <p class="text-sm text-gray-800 dark:text-wtext">
-              {{ comment.text }}
-            </p>
-            <span class="block mt-2 text-xs text-gray-500">
-              Par {{ comment.author?.name || "Anonyme" }}
-            </span>
-            <button
-              v-if="auth.user?.role === 'admin'"
-              @click="handleDeleteComment(comment.id)"
-              class="text-red-500 text-xs mt-1 hover:underline cursor-pointer"
-            >
-              🗑 Supprimer
-            </button>
-          </li>
-        </ul>
-
-        <!-- Pagination -->
-        <div class="flex justify-between items-center mb-6">
-          <button
-            @click="prevPage"
-            :disabled="commentsOffset === 0"
-            class="px-4 py-2 bg-wprimary dark:bg-white dark:text-black text-white text-sm rounded hover:bg-opacity-98 cursor-pointer disabled:opacity-50"
-          >
-            Précédent
-          </button>
-          <button
-            @click="nextPage"
-            :disabled="comments.length < commentsLimit"
-            class="px-4 py-2 bg-wprimary dark:bg-white dark:text-black text-white text-sm rounded hover:bg-opacity-98 cursor-pointer disabled:opacity-50"
-          >
-            Suivant
-          </button>
-        </div>
+        <CommentList
+          :comments="comments"
+          :auth="auth"
+          :limit="commentsLimit"
+          :offset="commentsOffset"
+          @prevPage="prevPage"
+          @nextPage="nextPage"
+          @delete="handleDeleteComment"
+        />
 
         <!-- Ajouter un commentaire -->
-        <div v-if="auth.isLoggedIn">
-          <textarea
-            v-model="commentText"
-            placeholder="Écris un commentaire..."
-            class="w-full p-3 rounded border border-gray-300 dark:bg-blackbg dark:text-white focus:outline-none focus:ring-2 focus:ring-wprimary dark:focus:ring-white mb-3"
-          />
-          <button
-            @click="handleAddComment"
-            class="bg-wprimary dark:bg-bprimary text-white px-4 py-3 rounded-lg shadow hover:bg-blue-900 cursor-pointer transition duration-300"
-          >
-            Envoyer
-          </button>
-        </div>
+        <CommentForm
+          v-if="auth.isLoggedIn"
+          :text="commentText"
+          @update:text="commentText = $event"
+          @submit="handleAddComment"
+        />
         <p v-else class="text-sm text-gray-600">Connecte-toi pour commenter.</p>
       </section>
     </article>
