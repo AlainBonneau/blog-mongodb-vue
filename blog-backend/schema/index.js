@@ -9,6 +9,7 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLInt,
+  GraphQLBoolean,
 } from "graphql";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
@@ -349,6 +350,47 @@ const Mutation = new GraphQLObjectType({
         );
 
         return token;
+      },
+    },
+
+    updateUserName: {
+      type: UserType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, { name }, context) {
+        if (!context.user) throw new Error("Non autorisé");
+
+        const user = await User.findByIdAndUpdate(
+          context.user,
+          { name },
+          { new: true }
+        );
+
+        return user;
+      },
+    },
+
+    updateUSerPassword: {
+      type: GraphQLBoolean,
+      args: {
+        oldPassword: { type: new GraphQLNonNull(GraphQLString) },
+        newPassword: { type: GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, { oldPassword, newPassword }, context) {
+        if (!context.user) throw new Error("Non autorisé");
+
+        const user = await User.findById(context.user);
+        if (!user) throw new Error("Utilisateur introuvable");
+
+        const match = await bcrypt.compare(oldPassword, user.password);
+        if (!match) throw new Error("Ancien mot de passe incorrect");
+
+        const saltRound = 10;
+        user.password = await bcrypt.hash(newPassword, saltRound);
+        await user.save();
+
+        return true;
       },
     },
   },
