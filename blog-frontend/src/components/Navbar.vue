@@ -32,6 +32,12 @@
         </button>
 
         <template v-if="auth.isLoggedIn">
+          <RouterLink
+            to="/profil"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition"
+          >
+            Profil
+          </RouterLink>
           <button
             @click="handleLogout"
             class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition"
