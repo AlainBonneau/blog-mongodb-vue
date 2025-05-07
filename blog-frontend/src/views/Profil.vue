@@ -22,7 +22,7 @@
       />
       <button
         type="submit"
-        class="w-full bg-wprimary text-white py-2 rounded-md font-semibold hover:bg-opacity-90 transition"
+        class="w-full bg-wprimary text-white py-2 rounded-md font-semibold hover:bg-opacity-90 transition cursor-pointer"
       >
         Enregistrer
       </button>
@@ -55,7 +55,7 @@
       />
       <button
         type="submit"
-        class="w-full bg-wprimary text-white py-2 rounded-md font-semibold hover:bg-opacity-90 transition"
+        class="w-full bg-wprimary text-white py-2 rounded-md font-semibold hover:bg-opacity-90 transition cursor-pointer"
       >
         Modifier le mot de passe
       </button>
