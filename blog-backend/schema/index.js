@@ -371,7 +371,7 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
-    updateUSerPassword: {
+    updateUserPassword: {
       type: GraphQLBoolean,
       args: {
         oldPassword: { type: new GraphQLNonNull(GraphQLString) },
