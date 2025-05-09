@@ -8,6 +8,30 @@
       Mon profil
     </h2>
 
+    <div
+      v-if="!userLoading && userResult?.me"
+      class="flex items-center justify-center mb-8"
+    >
+      <img
+        v-if="userResult.me.avatar"
+        :src="userResult.me.avatar"
+        alt="Avatar"
+        class="w-24 h-24 rounded-full border-2 border-wprimary dark:border-wtext"
+      />
+      <div v-else class="w-24 h-24 rounded-full bg-gray-300"></div>
+      <div class="ml-4">
+        <h3 class="text-xl font-bold text-wprimary dark:text-wtext">
+          {{ userResult.me.name }}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ userResult.me.email }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ userResult.me.createdAt }}
+        </p>
+      </div>
+    </div>
+
     <!-- Modifier le nom -->
     <form @submit.prevent="updateName" class="space-y-5 mb-12">
       <h3 class="text-lg font-bold text-wprimary dark:text-wtext">
@@ -75,8 +99,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import gql from "graphql-tag";
+import { useQuery } from "@vue/apollo-composable";
 import { useMutation } from "@vue/apollo-composable";
 import { useAuthStore } from "@/stores/auth";
 
@@ -90,11 +115,29 @@ const nameMessage = ref("");
 const passMessage = ref("");
 const passSuccess = ref(true);
 
-const UPDATE_NAME = gql`
-  mutation UpdateUserName($name: String!) {
-    updateUserName(name: $name) {
+const GET_ME = gql`
+  query Me {
+    me {
       id
       name
+      email
+      avatar
+      createdAt
+    }
+  }
+`;
+
+const UPDATE_NAME = gql`
+  mutation UpdateUserName($name: String!) {
+    updateUserName(newName: $name) {
+      token
+      user {
+        id
+        name
+        email
+        avatar
+        createdAt
+      }
     }
   }
 `;
@@ -105,13 +148,29 @@ const UPDATE_PASSWORD = gql`
   }
 `;
 
+const {
+  result: userResult,
+  loading: userLoading,
+  error: userError,
+} = useQuery(GET_ME);
+
+watchEffect(() => {
+  console.log("User result:", userResult.value);
+  if (userError.value) {
+    console.error("GraphQL Error:", userError.value);
+  }
+});
+
 const { mutate: updateUserName } = useMutation(UPDATE_NAME);
 const { mutate: updateUserPassword } = useMutation(UPDATE_PASSWORD);
 
 async function updateName() {
   try {
-    await updateUserName({ name: newName.value });
-    nameMessage.value = "Nom mis à jour avec succès.";
+    const { data } = await updateUserName({ name: newName.value });
+    if (data?.updateUserName?.token) {
+      auth.setToken(data.updateUserName.token); // Remplace le token pour avoir les infos à jour
+      nameMessage.value = "Nom mis à jour avec succès.";
+    }
   } catch (err) {
     nameMessage.value = "Erreur : " + err.message;
   }

@@ -41,7 +41,7 @@ app.use(
         const token = auth.split(" ")[1];
         try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET);
-          user = decoded.userId;
+          user = decoded; // ⚠️ garde tout le payload
         } catch (err) {
           console.warn("Invalid token");
         }

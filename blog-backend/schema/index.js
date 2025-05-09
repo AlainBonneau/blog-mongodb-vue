@@ -23,6 +23,8 @@ const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     password: { type: GraphQLString },
+    avatar: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
     posts: {
       type: new GraphQLList(PostType),
       resolve(parent, args) {
@@ -172,7 +174,7 @@ const RootQuery = new GraphQLObjectType({
         if (!context.user) {
           throw new Error("Non connecté");
         }
-        return User.findById(context.user);
+        return User.findById(context.user.userId);
       },
     },
   },
@@ -205,7 +207,7 @@ const Mutation = new GraphQLObjectType({
       async resolve(_, args, context) {
         if (!context.user) throw new Error("Non connecté");
 
-        const currentUser = await User.findById(context.user);
+        const currentUser = await User.findById(context.user.userId);
         if (!currentUser || currentUser.role !== "auteur") {
           throw new Error("Accès réservé aux auteurs");
         }
@@ -234,7 +236,7 @@ const Mutation = new GraphQLObjectType({
           throw new Error("Non connecté");
         }
 
-        const currentUser = await User.findById(context.user);
+        const currentUser = await User.findById(context.user.userId);
         const post = await Post.findById(postId);
 
         if (!post) {
@@ -285,7 +287,7 @@ const Mutation = new GraphQLObjectType({
           throw new Error("Non connecté");
         }
 
-        const user = await User.findById(context.user);
+        const user = await User.findById(context.user.userId);
         if (user.role !== "admin") {
           throw new Error("Non autorisé");
         }
@@ -362,7 +364,7 @@ const Mutation = new GraphQLObjectType({
         if (!context.user) throw new Error("Non autorisé");
 
         const user = await User.findByIdAndUpdate(
-          context.user,
+          context.user.userId,
           { name },
           { new: true }
         );
@@ -380,7 +382,7 @@ const Mutation = new GraphQLObjectType({
       async resolve(_, { oldPassword, newPassword }, context) {
         if (!context.user) throw new Error("Non autorisé");
 
-        const user = await User.findById(context.user);
+        const user = await User.findById(context.user.userId);
         if (!user) throw new Error("Utilisateur introuvable");
 
         const match = await bcrypt.compare(oldPassword, user.password);
