@@ -12,23 +12,25 @@
       v-if="!userLoading && userResult?.me"
       class="flex items-center justify-center mb-8"
     >
-      <img
-        v-if="userResult.me.avatar"
-        :src="userResult.me.avatar"
-        alt="Avatar"
-        class="w-24 h-24 rounded-full border-2 border-wprimary dark:border-wtext"
-      />
-      <div v-else class="w-24 h-24 rounded-full bg-gray-300"></div>
-      <div class="ml-4">
-        <h3 class="text-xl font-bold text-wprimary dark:text-wtext">
-          {{ userResult.me.name }}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400">
-          {{ userResult.me.email }}
-        </p>
-        <p class="text-gray-600 dark:text-gray-400">
-          {{ userResult.me.createdAt }}
-        </p>
+      <div class="flex flex-col items-center">
+        <img
+          v-if="userResult.me.avatar"
+          :src="userResult.me.avatar"
+          alt="Avatar"
+          class="w-24 h-24 rounded-full border-2 border-wprimary dark:border-wtext"
+        />
+        <div v-else class="w-24 h-24 rounded-full bg-gray-300"></div>
+        <div class="flex flex-col items-center">
+          <h3 class="text-xl font-bold text-wprimary dark:text-wtext">
+            {{ userResult.me.name }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 text-center">
+            {{ userResult.me.email }}
+          </p>
+          <p class="text-gray-600 dark:text-gray-400">
+            {{ userResult.me.createdAt }}
+          </p>
+        </div>
       </div>
     </div>
 
