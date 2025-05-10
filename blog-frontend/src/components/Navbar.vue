@@ -26,7 +26,7 @@
       <div class="hidden md:flex gap-2 items-center">
         <button
           @click="toggleDarkMode"
-          class="bg-white text-wprimary font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition"
+          class="bg-white text-wprimary font-semibold px-3 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition cursor-pointer"
         >
           {{ isDarkMode ? "☀️ Clair" : "🌙 Sombre" }}
         </button>
@@ -40,7 +40,7 @@
           </RouterLink>
           <button
             @click="handleLogout"
-            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition"
+            class="bg-white text-wprimary font-semibold px-4 py-2 rounded hover:bg-blue-100 dark:bg-blackbg dark:text-wtext dark:hover:bg-wtext dark:hover:text-blackbg transition cursor-pointer"
           >
             Déconnexion
           </button>

@@ -269,7 +269,7 @@ const Mutation = new GraphQLObjectType({
 
         const comment = new Comment({
           text: args.text,
-          author: context.user,
+          author: context.user.userId,
           post: args.post,
         });
 
