@@ -6,6 +6,7 @@ import ArticleDetail from "../views/ArticleDetail.vue";
 import LoginRegister from "../views/LoginRegister.vue";
 import AddArticle from "../views/AddArticle.vue";
 import Profil from "../views/Profil.vue";
+import Admin from "../views/Admin.vue";
 
 const routes = [
   {
@@ -45,11 +46,28 @@ const routes = [
       }
     },
   },
+  {
+    path: "/admin",
+    name: "AdminDashboard",
+    component: Admin,
+    meta: { requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore();
+  const userRole = auth.user?.role;
+
+  if (to.meta.requiresAdmin && userRole !== "admin") {
+    return next("/");
+  }
+
+  next();
 });
 
 export default router;
