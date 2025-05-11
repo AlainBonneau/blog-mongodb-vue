@@ -16,6 +16,7 @@ const UserType = new GraphQLObjectType({
     password: { type: GraphQLString },
     avatar: { type: GraphQLString },
     createdAt: { type: GraphQLString },
+    role: { type: GraphQLString },
     posts: {
       type: new GraphQLList(PostType),
       resolve(parent, args) {

@@ -7,6 +7,7 @@ import LoginRegister from "../views/LoginRegister.vue";
 import AddArticle from "../views/AddArticle.vue";
 import Profil from "../views/Profil.vue";
 import Admin from "../views/Admin.vue";
+import AdminUsers from "../views/AdminUsers.vue";
 
 const routes = [
   {
@@ -50,6 +51,12 @@ const routes = [
     path: "/admin",
     name: "AdminDashboard",
     component: Admin,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/admin/users",
+    name: "AdminUsers",
+    component: AdminUsers,
     meta: { requiresAdmin: true },
   },
 ];
