@@ -8,6 +8,7 @@ import AddArticle from "../views/AddArticle.vue";
 import Profil from "../views/Profil.vue";
 import Admin from "../views/Admin.vue";
 import AdminUsers from "../views/AdminUsers.vue";
+import AdminCategories from "../views/AdminCategories.vue";
 
 const routes = [
   {
@@ -57,6 +58,12 @@ const routes = [
     path: "/admin/users",
     name: "AdminUsers",
     component: AdminUsers,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/admin/categories",
+    name: "AdminCategories",
+    component: AdminCategories,
     meta: { requiresAdmin: true },
   },
 ];

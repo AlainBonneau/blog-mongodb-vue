@@ -32,6 +32,26 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
+    deleteCategory: {
+      type: GraphQLString,
+      args: {
+        categoryId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, { categoryId }, context) {
+        if (!context.user || context.user.role !== "admin") {
+          throw new Error("Non autorisé");
+        }
+
+        const category = await Category.findById(categoryId);
+        if (!category) {
+          throw new Error("Catégorie introuvable");
+        }
+
+        await Category.findByIdAndDelete(categoryId);
+        return "Catégorie supprimée";
+      },
+    },
+
     addPost: {
       type: PostType,
       args: {
