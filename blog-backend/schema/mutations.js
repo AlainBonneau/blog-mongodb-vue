@@ -232,6 +232,35 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
+    updateUserRole: {
+      type: GraphQLString,
+      args: {
+        userId: { type: new GraphQLNonNull(GraphQLID) },
+        role: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(_, { userId, role }, context) {
+        if (!context.user || context.user.role !== "admin") {
+          throw new Error("Non autorisé");
+        }
+
+        const validRoles = ["utilisateur", "auteur", "admin"];
+        if (!validRoles.includes(role)) {
+          throw new Error("Rôle invalide");
+        }
+
+        const user = await User.findByIdAndUpdate(
+          userId,
+          { role },
+          { new: true }
+        );
+        if (!user) {
+          throw new Error("Utilisateur introuvable");
+        }
+
+        return `Rôle mis à jour en ${role}`;
+      },
+    },
+
     deleteUser: {
       type: GraphQLString,
       args: {
