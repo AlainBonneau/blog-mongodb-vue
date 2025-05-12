@@ -18,6 +18,9 @@
       <nav class="hidden md:flex space-x-6 font-serif dark:text-wtext">
         <RouterLink to="/" class="hover:underline">Accueil</RouterLink>
         <RouterLink to="/articles" class="hover:underline">Articles</RouterLink>
+        <template v-if="auth.isLoggedIn && auth.user.role === 'admin'">
+          <RouterLink to="/admin" class="hover:underline">Admin</RouterLink>
+        </template>
         <RouterLink to="#" class="hover:underline">À propos</RouterLink>
         <RouterLink to="#" class="hover:underline">Contact</RouterLink>
       </nav>
