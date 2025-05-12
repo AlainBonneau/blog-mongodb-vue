@@ -74,6 +74,13 @@
         class="block hover:underline text-wprimary dark:text-wtext"
         >Articles</RouterLink
       >
+      <template v-if="auth.isLoggedIn && auth.user.role === 'admin'">
+        <RouterLink
+          to="/admin"
+          class="block hover:underline text-wprimary dark:text-wtext"
+          >Admin</RouterLink
+        >
+      </template>
       <RouterLink
         to="#"
         class="block hover:underline text-wprimary dark:text-wtext"
