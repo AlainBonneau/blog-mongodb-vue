@@ -5,6 +5,12 @@
       <li v-for="user in users" :key="user.id" class="mb-2">
         <strong>{{ user.name }}</strong> - {{ user.email }} - Rôle:
         {{ user.role }}
+        <button
+          @click="deleteUser(user.id)"
+          class="ml-4 bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
+        >
+          Supprimer
+        </button>
       </li>
     </ul>
     <p v-if="loading">Chargement...</p>
@@ -14,9 +20,10 @@
 
 <script setup>
 import { computed } from "vue";
-import { useQuery } from "@vue/apollo-composable";
+import { useMutation, useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
+// Chercher tous les utilisateurs
 const GET_USERS = gql`
   query GetUsers {
     users {
@@ -31,4 +38,21 @@ const GET_USERS = gql`
 const { result, loading, error } = useQuery(GET_USERS);
 
 const users = computed(() => result.value?.users || []);
+
+// Supprimer un utilisateur
+const DELETE_USER = gql`
+  mutation DeleteUser($userId: ID!) {
+    deleteUser(userId: $userId)
+  }
+`;
+
+const { mutate: deleteUserMutation } = useMutation(DELETE_USER);
+
+function deleteUser(userId) {
+  if (confirm("Confirmer la suppression de l'utilisateur ?")) {
+    deleteUserMutation({ userId }).then(() => {
+      result.refetch();
+    });
+  }
+}
 </script>

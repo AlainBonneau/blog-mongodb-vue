@@ -231,6 +231,26 @@ const Mutation = new GraphQLObjectType({
         return true;
       },
     },
+
+    deleteUser: {
+      type: GraphQLString,
+      args: {
+        userId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(_, { userId }, context) {
+        if (!context.user || context.user.role !== "admin") {
+          throw new Error("Non autorisé");
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new Error("Utilisateur introuvable");
+        }
+
+        await User.findByIdAndDelete(userId);
+        return "Utilisateur supprimé";
+      },
+    },
   },
 });
 
