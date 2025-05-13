@@ -94,11 +94,6 @@ if (!auth.isLoggedIn) {
   router.push("/login");
 }
 
-// Ne pas oublier de changer une fois les role créer
-// if (auth.user.role !== "admin" && auth.user.role !== "editor") {
-//   router.push("/");
-// }
-
 const form = ref({ title: "", content: "", image: "", category: "" });
 const message = ref("");
 
@@ -143,7 +138,7 @@ const handleSubmit = async () => {
       image: form.value.image || null,
       category: form.value.category || null,
     });
-    message.value = "Article publié avec succès ! 🚀";
+    message.value = "Article publié avec succès !";
     setTimeout(() => {
       router.push("/articles");
     }, 1300);

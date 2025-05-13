@@ -64,8 +64,12 @@ const Mutation = new GraphQLObjectType({
         if (!context.user) throw new Error("Non connecté");
 
         const currentUser = await User.findById(context.user.userId);
-        if (!currentUser || currentUser.role !== "auteur") {
-          throw new Error("Accès réservé aux auteurs");
+        if (
+          !currentUser ||
+          currentUser.role !== "auteur" &&
+          currentUser.role !== "admin"
+        ) {
+          throw new Error("Accès réservé aux auteurs et aux administrateurs");
         }
 
         const post = new Post({
