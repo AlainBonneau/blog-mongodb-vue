@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-2xl mx-auto p-6 bg-white rounded shadow">
+  <section class="mt-8 max-w-2xl mx-auto p-6 bg-white rounded shadow">
     <h1 class="text-2xl font-bold mb-4">Gestion des catégories</h1>
 
     <!-- Liste des catégories -->
