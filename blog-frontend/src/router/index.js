@@ -10,6 +10,7 @@ import Admin from "../views/Admin.vue";
 import AdminUsers from "../views/AdminUsers.vue";
 import AdminCategories from "../views/AdminCategories.vue";
 import AdminPosts from "../views/AdminPosts.vue";
+import AdminComments from "../views/AdminComments.vue";
 
 const routes = [
   {
@@ -71,6 +72,12 @@ const routes = [
     path: "/admin/posts",
     name: "AdminPosts",
     component: AdminPosts,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/admin/comments",
+    name: "AdminComments",
+    component: AdminComments,
     meta: { requiresAdmin: true },
   },
 ];
