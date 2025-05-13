@@ -21,7 +21,7 @@
         <template v-if="auth.isLoggedIn && auth.user.role === 'admin'">
           <RouterLink to="/admin" class="hover:underline">Admin</RouterLink>
         </template>
-        <RouterLink to="#" class="hover:underline">À propos</RouterLink>
+        <RouterLink to="/about" class="hover:underline">À propos</RouterLink>
         <RouterLink to="#" class="hover:underline">Contact</RouterLink>
       </nav>
 
