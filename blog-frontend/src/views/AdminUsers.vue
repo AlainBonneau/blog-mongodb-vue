@@ -1,30 +1,43 @@
 <template>
-  <section class="mt-8 max-w-4xl mx-auto p-6 bg-white rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">Gestion des utilisateurs</h1>
-    <ul v-if="!loading">
-      <li v-for="user in users" :key="user.id" class="mb-2">
-        <strong>{{ user.name }}</strong> - {{ user.email }} - Rôle:
-        {{ user.role }}
-        <select
-          v-model="selectedRole[user.id]"
-          @change="changeRole(user.id)"
-          class="ml-4 border px-1"
-        >
-          <option value="utilisateur">Utilisateur</option>
-          <option value="auteur">Auteur</option>
-          <option value="admin">Admin</option>
-        </select>
+  <section
+    class="max-w-4xl mx-auto mt-10 p-8 rounded-2xl shadow-2xl transition-colors bg-wprimary dark:bg-blackbg"
+  >
+    <h1 class="text-3xl font-serif font-bold mb-6 text-whitebg dark:text-wtext">
+      Gestion des utilisateurs
+    </h1>
 
-        <button
-          @click="deleteUser(user.id)"
-          class="ml-4 bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
-        >
-          Supprimer
-        </button>
+    <ul v-if="!loading">
+      <li
+        v-for="user in users"
+        :key="user.id"
+        class="mb-4 p-4 rounded-md border border-whitebg dark:border-wtext bg-whitebg dark:bg-bprimary flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+      >
+        <div class="text-bprimary dark:text-wtext">
+          <strong>{{ user.name }}</strong> - {{ user.email }} - Rôle :
+          {{ user.role }}
+        </div>
+
+        <div class="flex gap-2 items-center">
+          <select
+            v-model="selectedRole[user.id]"
+            @change="changeRole(user.id)"
+            class="border px-2 py-1 rounded dark:bg-bprimary dark:text-wtext dark:border-wtext"
+          >
+            <option value="utilisateur">Utilisateur</option>
+            <option value="auteur">Auteur</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button
+            @click="deleteUser(user.id)"
+            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition cursor-pointer"
+          >
+            Supprimer
+          </button>
+        </div>
       </li>
     </ul>
-    <p v-if="loading">Chargement...</p>
-    <p v-if="error">{{ error.message }}</p>
+    <p v-if="loading" class="text-whitebg dark:text-wtext">Chargement...</p>
+    <p v-if="error" class="text-red-500">{{ error.message }}</p>
   </section>
 </template>
 
