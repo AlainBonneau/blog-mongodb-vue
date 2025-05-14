@@ -1,30 +1,34 @@
 <template>
-  <section class="mt-8 max-w-4xl mx-auto p-6 bg-white rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">Modération des commentaires</h1>
+  <section
+    class="max-w-4xl mx-auto mt-10 p-8 rounded-2xl shadow-2xl transition-colors bg-wprimary dark:bg-blackbg"
+  >
+    <h1 class="text-3xl font-serif font-bold mb-6 text-whitebg dark:text-wtext">
+      Modération des commentaires
+    </h1>
 
     <ul v-if="!loading">
       <li
         v-for="comment in comments"
         :key="comment.id"
-        class="mb-2 flex justify-between items-center border-b pb-2"
+        class="mb-4 p-4 rounded-md border border-whitebg dark:border-wtext bg-whitebg dark:bg-bprimary"
       >
         <div>
-          <p>{{ comment.text }}</p>
-          <p class="text-sm text-gray-600">
+          <p class="text-bprimary dark:text-wtext mb-2">{{ comment.text }}</p>
+          <p class="text-sm text-bprimary dark:text-wtext mb-2">
             Auteur : {{ comment.author?.name || "Inconnu" }} | Article :
             {{ comment.post?.title || "Inconnu" }}
           </p>
+          <button
+            @click="removeComment(comment.id)"
+            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition cursor-pointer"
+          >
+            Supprimer
+          </button>
         </div>
-        <button
-          @click="removeComment(comment.id)"
-          class="bg-red-600 text-white px-2 py-1 rounded cursor-pointer"
-        >
-          Supprimer
-        </button>
       </li>
     </ul>
-    <p v-if="loading">Chargement...</p>
-    <p v-if="error">{{ error.message }}</p>
+    <p v-if="loading" class="text-whitebg dark:text-wtext">Chargement...</p>
+    <p v-if="error" class="text-red-500">{{ error.message }}</p>
   </section>
 </template>
 
