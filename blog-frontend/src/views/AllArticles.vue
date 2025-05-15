@@ -12,6 +12,7 @@ const auth = useAuthStore();
 const articles = ref([]);
 const categories = ref([]);
 const selectedCategory = ref(null);
+const searchTerm = ref("");
 
 const limit = 6;
 const page = ref(parseInt(route.query.page) || 1);
@@ -31,13 +32,27 @@ const loadCategories = async () => {
   categories.value = res.data.data.categories;
 };
 
-// Charger les articles (filtré ou non)
+// Charger les articles selon le contexte (filtre, recherche, pagination)
 const loadArticles = async () => {
   const offset = (page.value - 1) * limit;
-  const isFiltering = !!selectedCategory.value;
 
-  const query = isFiltering
-    ? `
+  let query;
+  let variables;
+
+  if (searchTerm.value.trim()) {
+    query = `
+      query ($keyword: String!) {
+        searchPosts(keyword: $keyword) {
+          id
+          title
+          content
+          image
+        }
+      }
+    `;
+    variables = { keyword: searchTerm.value.trim() };
+  } else if (selectedCategory.value) {
+    query = `
       query ($categoryId: ID!) {
         postsByCategory(categoryId: $categoryId) {
           id
@@ -46,8 +61,10 @@ const loadArticles = async () => {
           image
         }
       }
-    `
-    : `
+    `;
+    variables = { categoryId: selectedCategory.value };
+  } else {
+    query = `
       query ($limit: Int!, $offset: Int!) {
         posts(limit: $limit, offset: $offset) {
           id
@@ -57,40 +74,48 @@ const loadArticles = async () => {
         }
       }
     `;
-
-  const variables = isFiltering
-    ? { categoryId: selectedCategory.value }
-    : { limit, offset };
+    variables = { limit, offset };
+  }
 
   const res = await axios.post("http://localhost:4000/graphql", {
     query,
     variables,
   });
-
-  articles.value = isFiltering
-    ? res.data.data.postsByCategory
-    : res.data.data.posts;
+  articles.value =
+    res.data.data.posts ||
+    res.data.data.postsByCategory ||
+    res.data.data.searchPosts ||
+    [];
 };
-
-// Réagir aux changements de page
-watch(page, () => {
-  router.push({ path: "/articles", query: { page: page.value } });
-  loadArticles();
-});
 
 // Sélectionner une catégorie
 const selectCategory = (categoryId) => {
   selectedCategory.value = categoryId;
+  searchTerm.value = "";
   page.value = 1;
   loadArticles();
 };
 
-// Réinitialiser les filtres
+// Réinitialiser le filtre
 const resetFilter = () => {
+  selectedCategory.value = null;
+  searchTerm.value = "";
+  page.value = 1;
+  loadArticles();
+};
+
+// Effectuer une recherche
+const searchArticles = () => {
   selectedCategory.value = null;
   page.value = 1;
   loadArticles();
 };
+
+// Suivre les changements de page
+watch(page, () => {
+  router.push({ path: "/articles", query: { page: page.value } });
+  loadArticles();
+});
 
 // Initialisation
 onMounted(() => {
@@ -111,6 +136,22 @@ onMounted(() => {
         class="p-4 bg-wprimary text-white font-semibold px-3 py-2 rounded dark:bg-white dark:text-black cursor-pointer"
         >Créer un article</a
       >
+    </div>
+
+    <!-- Champ de recherche -->
+    <div class="flex gap-2 mb-6">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Rechercher un article..."
+        class="border px-3 py-2 rounded flex-1 dark:bg-bprimary dark:text-wtext dark:border-wtext"
+      />
+      <button
+        @click="searchArticles"
+        class="bg-wprimary text-white px-4 py-2 rounded hover:opacity-90 transition"
+      >
+        Rechercher
+      </button>
     </div>
 
     <!-- Filtres Catégories -->

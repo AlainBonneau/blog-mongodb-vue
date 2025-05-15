@@ -2,6 +2,7 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLID,
+  GraphQLString,
   GraphQLInt,
   GraphQLNonNull,
 } from "graphql";
@@ -50,6 +51,17 @@ const RootQuery = new GraphQLObjectType({
       args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(_, args) {
         return Post.find({ category: args.categoryId });
+      },
+    },
+
+    searchPosts: {
+      type: new GraphQLList(PostType),
+      args: { keyword: { type: new GraphQLNonNull(GraphQLString) } },
+      resolve(_, { keyword }) {
+        const regex = new RegExp(keyword, "i");
+        return Post.find({
+          $or: [{ title: regex }, { content: regex }],
+        });
       },
     },
 
