@@ -215,8 +215,10 @@ const handleDeleteComment = async (commentId) => {
   try {
     await deleteComment({ commentId });
     await refetchComments();
+    toast.showToast("Commentaire supprimé avec succès !", "success");
   } catch (err) {
-    alert("Erreur : " + err.message);
+    console.error("Erreur suppression commentaire :", err);
+    toast.showToast("Erreur : " + err.message, "error");
   }
 };
 </script>
