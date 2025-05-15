@@ -86,11 +86,13 @@ import { useQuery, useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { ref, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
+import { useToastStore } from "@/stores/toast";
 
 const router = useRouter();
 const route = useRoute();
 const postId = route.params.id;
 const auth = useAuthStore();
+const toast = useToastStore();
 
 // Get post
 const GET_POST = gql`
@@ -190,8 +192,10 @@ const handleDelete = async () => {
   try {
     await deletePost({ postId });
     router.push("/articles");
+    toast.showToast("Article supprimé avec succès !", "success");
   } catch (err) {
-    alert("Erreur lors de la suppression : " + err.message);
+    console.error("Erreur suppression article :", err);
+    toast.showToast("Erreur : " + err.message, "error");
   }
 };
 
