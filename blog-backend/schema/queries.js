@@ -45,6 +45,14 @@ const RootQuery = new GraphQLObjectType({
       },
     },
 
+    postsByCategory: {
+      type: new GraphQLList(PostType),
+      args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(_, args) {
+        return Post.find({ category: args.categoryId });
+      },
+    },
+
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },

@@ -10,13 +10,44 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const articles = ref([]);
+const categories = ref([]);
+const selectedCategory = ref(null);
+
 const limit = 6;
 const page = ref(parseInt(route.query.page) || 1);
 
-const loadArticles = async () => {
-  const offset = (page.value - 1) * limit;
+// Charger les catégories
+const loadCategories = async () => {
   const res = await axios.post("http://localhost:4000/graphql", {
     query: `
+      query {
+        categories {
+          id
+          name
+        }
+      }
+    `,
+  });
+  categories.value = res.data.data.categories;
+};
+
+// Charger les articles (filtré ou non)
+const loadArticles = async () => {
+  const offset = (page.value - 1) * limit;
+  const isFiltering = !!selectedCategory.value;
+
+  const query = isFiltering
+    ? `
+      query ($categoryId: ID!) {
+        postsByCategory(categoryId: $categoryId) {
+          id
+          title
+          content
+          image
+        }
+      }
+    `
+    : `
       query ($limit: Int!, $offset: Int!) {
         posts(limit: $limit, offset: $offset) {
           id
@@ -25,19 +56,45 @@ const loadArticles = async () => {
           image
         }
       }
-    `,
-    variables: {
-      limit,
-      offset,
-    },
+    `;
+
+  const variables = isFiltering
+    ? { categoryId: selectedCategory.value }
+    : { limit, offset };
+
+  const res = await axios.post("http://localhost:4000/graphql", {
+    query,
+    variables,
   });
 
-  articles.value = res.data.data.posts;
+  articles.value = isFiltering
+    ? res.data.data.postsByCategory
+    : res.data.data.posts;
 };
 
-onMounted(loadArticles);
+// Réagir aux changements de page
 watch(page, () => {
   router.push({ path: "/articles", query: { page: page.value } });
+  loadArticles();
+});
+
+// Sélectionner une catégorie
+const selectCategory = (categoryId) => {
+  selectedCategory.value = categoryId;
+  page.value = 1;
+  loadArticles();
+};
+
+// Réinitialiser les filtres
+const resetFilter = () => {
+  selectedCategory.value = null;
+  page.value = 1;
+  loadArticles();
+};
+
+// Initialisation
+onMounted(() => {
+  loadCategories();
   loadArticles();
 });
 </script>
@@ -48,7 +105,6 @@ watch(page, () => {
       <h1 class="text-3xl font-bold text-wprimary dark:text-wtext mb-8">
         Tous les articles
       </h1>
-      <!-- Ne pas oublier de rajouter les condition d'être sois admin sois auteur -->
       <a
         v-if="auth.isLoggedIn"
         href="/nouvel-article"
@@ -57,6 +113,25 @@ watch(page, () => {
       >
     </div>
 
+    <!-- Filtres Catégories -->
+    <div class="mb-6 flex flex-wrap gap-2">
+      <button
+        @click="resetFilter"
+        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition"
+      >
+        Toutes les catégories
+      </button>
+      <button
+        v-for="cat in categories"
+        :key="cat.id"
+        @click="selectCategory(cat.id)"
+        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition"
+      >
+        {{ cat.name }}
+      </button>
+    </div>
+
+    <!-- Liste des articles -->
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
       <ArticlePreview
         v-for="article in articles"
