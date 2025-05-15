@@ -44,7 +44,10 @@
 <script setup>
 import { ref, computed, watchEffect } from "vue";
 import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useToastStore } from "@/stores/toast";
 import gql from "graphql-tag";
+
+const toast = useToastStore();
 
 // Chercher tous les utilisateurs
 const GET_USERS = gql`
@@ -58,7 +61,7 @@ const GET_USERS = gql`
   }
 `;
 
-const { result, loading, error } = useQuery(GET_USERS);
+const { result, loading, error, refetch } = useQuery(GET_USERS);
 
 const users = computed(() => result.value?.users || []);
 
@@ -84,7 +87,8 @@ watchEffect(() => {
 function changeRole(userId) {
   const role = selectedRole.value[userId];
   updateUserRoleMutation({ userId, role }).then(() => {
-    result.refetch();
+    refetch(); // ✅ utilise refetch directement
+    toast.showToast("Rôle mis à jour avec succès !", "success");
   });
 }
 
@@ -100,7 +104,8 @@ const { mutate: deleteUserMutation } = useMutation(DELETE_USER);
 function deleteUser(userId) {
   if (confirm("Confirmer la suppression de l'utilisateur ?")) {
     deleteUserMutation({ userId }).then(() => {
-      result.refetch();
+      refetch();
+      toast.showToast("Utilisateur supprimé avec succès !", "success");
     });
   }
 }

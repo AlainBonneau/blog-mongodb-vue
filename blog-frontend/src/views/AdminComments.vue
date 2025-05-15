@@ -35,7 +35,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useQuery, useMutation } from "@vue/apollo-composable";
+import { useToastStore } from "@/stores/toast";
 import gql from "graphql-tag";
+
+const toast = useToastStore();
 
 // Query pour récupérer tous les commentaires
 const GET_COMMENTS = gql`
@@ -69,6 +72,7 @@ function removeComment(commentId) {
   if (confirm("Confirmer la suppression du commentaire ?")) {
     deleteCommentMutation({ commentId }).then(() => {
       refetch();
+      toast.showToast("Commentaire supprimé avec succès.", "success");
     });
   }
 }

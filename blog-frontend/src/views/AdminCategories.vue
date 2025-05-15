@@ -46,7 +46,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useQuery, useMutation } from "@vue/apollo-composable";
+import { useToastStore } from "@/stores/toast";
 import gql from "graphql-tag";
+
+const toast = useToastStore();
 
 // Queries et mutations
 const GET_CATEGORIES = gql`
@@ -85,6 +88,7 @@ function addNewCategory() {
   addCategoryMutation({ name: newCategoryName.value }).then(() => {
     newCategoryName.value = "";
     refetch();
+    toast.showToast("Catégorie ajoutée avec succès", "success");
   });
 }
 
@@ -95,6 +99,7 @@ function removeCategory(categoryId) {
   if (confirm("Confirmer la suppression de la catégorie ?")) {
     deleteCategoryMutation({ categoryId }).then(() => {
       refetch();
+      toast.showToast("Catégorie supprimée avec succès", "success");
     });
   }
 }

@@ -37,7 +37,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useQuery, useMutation } from "@vue/apollo-composable";
+import { useToastStore } from "@/stores/toast";
 import gql from "graphql-tag";
+
+const toast = useToastStore();
 
 // Query pour récupérer tous les articles
 const GET_ALL_POSTS = gql`
@@ -71,6 +74,7 @@ function removePost(postId) {
   if (confirm("Confirmer la suppression de l'article ?")) {
     deletePostMutation({ postId }).then(() => {
       refetch();
+      toast.showToast("Article supprimé avec succès !", "success");
     });
   }
 }
