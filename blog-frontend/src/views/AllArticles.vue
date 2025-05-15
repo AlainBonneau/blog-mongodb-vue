@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-import axios from "axios";
+import apiClient from "../lib/axios";
 import ArticlePreview from "../components/ArticlePreview.vue";
 
 const route = useRoute();
@@ -19,7 +19,7 @@ const page = ref(parseInt(route.query.page) || 1);
 
 // Charger les catégories
 const loadCategories = async () => {
-  const res = await axios.post("http://localhost:4000/graphql", {
+  const res = await apiClient.post("/graphql", {
     query: `
       query {
         categories {
@@ -77,7 +77,7 @@ const loadArticles = async () => {
     variables = { limit, offset };
   }
 
-  const res = await axios.post("http://localhost:4000/graphql", {
+  const res = await apiClient.post("/graphql", {
     query,
     variables,
   });

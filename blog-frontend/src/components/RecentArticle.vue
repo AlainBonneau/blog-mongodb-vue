@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import apiClient from "../lib/axios";
 import ArticlePreview from "./ArticlePreview.vue";
 
 const articles = ref([]);
 
 onMounted(async () => {
   try {
-    const response = await axios.post("http://localhost:4000/graphql", {
+    const response = await apiClient.post("/graphql", {
       query: `
       query {
   posts(limit: 3) {
