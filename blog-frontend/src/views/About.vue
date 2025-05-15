@@ -10,24 +10,29 @@
       <strong class="text-whitebg dark:text-wtext">Mon Blog</strong> !
     </p>
     <p class="mb-4 text-bprimary dark:text-wtext">
-      Ce site a été créé pour permettre à nos utilisateurs de publier, commenter
-      et partager des articles sur divers sujets.
-    </p>
-    <p class="mb-4 text-bprimary dark:text-wtext">
-      Développé avec
+      J’ai créé ce blog avant tout pour me challenger et continuer à progresser
+      en tant que développeur web. C'était l’occasion parfaite pour expérimenter
+      des technologies modernes comme
       <strong class="text-whitebg dark:text-wtext"
-        >Vue.js, GraphQL, Node.js et MongoDB</strong
-      >, il s'agit d'une plateforme moderne pensée pour la communauté.
+        >Vue.js, TailwindCSS, GraphQL, MongoDB et Mongoose</strong
+      >, tout en construisant une vraie plateforme fonctionnelle.
     </p>
     <p class="mb-4 text-bprimary dark:text-wtext">
-      Nous croyons en l'importance de l'expression libre et du partage de
-      connaissances, dans le respect et la bienveillance.
+      Mais au-delà du côté technique, ce blog est aussi un espace d’échange et
+      de partage, où je peux parler de mes centres d'intérêt comme
+      <strong class="text-whitebg dark:text-wtext"
+        >le développement web, les jeux vidéo, les films, les séries et les
+        animés.</strong
+      >
     </p>
-    <p class="text-bprimary dark:text-wtext">
-      Pour en savoir plus ou nous contacter, rendez-vous sur notre page
-      <router-link to="/contact" class="text-whitebg underline hover:opacity-80"
-        >Contact</router-link
-      >.
+    <p class="mb-4 text-bprimary dark:text-wtext">
+      Si vous aussi, vous avez envie de partager vos idées, vos expériences ou
+      vos passions, sachez que vous pouvez devenir auteur sur le blog. Pour
+      cela, il suffit de me contacter via la page
+      <a class="underline" href="/contact">contact</a>.
+    </p>
+    <p class="mb-4 text-bprimary dark:text-wtext">
+      Merci de faire partie de cette aventure, et bonne lecture à tous 😁
     </p>
   </section>
 </template>
