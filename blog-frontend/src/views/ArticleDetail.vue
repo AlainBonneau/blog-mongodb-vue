@@ -171,8 +171,10 @@ const handleAddComment = async () => {
     await addComment({ text: commentText.value, post: postId });
     commentText.value = "";
     await refetchComments();
+    toast.showToast("Commentaire ajouté avec succès !", "success");
   } catch (err) {
     console.error("Erreur ajout commentaire :", err);
+    toast.showToast("Erreur : " + err.message, "error");
   }
 };
 
