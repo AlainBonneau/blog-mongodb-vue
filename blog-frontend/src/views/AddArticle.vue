@@ -86,16 +86,17 @@ import { useAuthStore } from "../stores/auth";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { useRouter } from "vue-router";
+import { useToastStore } from "@/stores/toast"; // ✅ import du toast
 
 const auth = useAuthStore();
 const router = useRouter();
+const toast = useToastStore(); // ✅ instance du toast
 
 if (!auth.isLoggedIn) {
   router.push("/login");
 }
 
 const form = ref({ title: "", content: "", image: "", category: "" });
-const message = ref("");
 
 // Query catégories
 const GET_CATEGORIES = gql`
@@ -138,12 +139,14 @@ const handleSubmit = async () => {
       image: form.value.image || null,
       category: form.value.category || null,
     });
-    message.value = "Article publié avec succès !";
+
+    toast.showToast("Article publié avec succès !", "success"); // ✅ toast succès
+
     setTimeout(() => {
       router.push("/articles");
     }, 1300);
   } catch (err) {
-    message.value = "Erreur : " + err.message;
+    toast.showToast("Erreur : " + err.message, "error"); // ✅ toast erreur
   }
 };
 </script>
