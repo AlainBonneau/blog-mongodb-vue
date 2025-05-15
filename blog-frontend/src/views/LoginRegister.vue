@@ -131,6 +131,7 @@ const handleSubmit = async () => {
         password: form.value.password,
       });
       auth.setToken(data.register);
+      router.push("/");
     }
   } catch (err) {
     errorMessage.value = err.message;
