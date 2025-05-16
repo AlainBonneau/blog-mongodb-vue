@@ -7,7 +7,7 @@
     </h1>
     <p class="mb-4 text-bprimary dark:text-wtext">
       Bienvenue sur
-      <strong class="text-whitebg dark:text-wtext">Mon Blog</strong> !
+      <strong class="text-whitebg dark:text-wtext">AltTab</strong> !
     </p>
     <p class="mb-4 text-bprimary dark:text-wtext">
       J’ai créé ce blog avant tout pour me challenger et continuer à progresser

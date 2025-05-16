@@ -3,8 +3,13 @@
     class="bg-wprimary text-white shadow-md dark:bg-bprimary transition-colors duration-300"
   >
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <!-- Logo -->
-      <h1 class="text-2xl font-serif">Mon Blog</h1>
+      <!-- Logo et titre -->
+      <img
+        src="../../public/assets/alttabw.png"
+        alt=""
+        class="h-12 w-12 rounded-full"
+      />
+      <h1 class="text-2xl font-serif">AltTab</h1>
 
       <!-- Bouton menu mobile -->
       <button

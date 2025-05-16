@@ -4,7 +4,7 @@
     <section
       class="text-center p-10 rounded-2xl bg-wprimary dark:bg-bprimary text-white shadow-lg"
     >
-      <h1 class="text-4xl font-serif font-bold mb-4">Bienvenue sur Mon Blog</h1>
+      <h1 class="text-4xl font-serif font-bold mb-4">Bienvenue sur AltTab</h1>
       <p class="text-lg mb-6">
         Un espace d’échange et de partage autour du développement web, des jeux
         vidéo, des films, des séries et des animés.
