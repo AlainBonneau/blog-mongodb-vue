@@ -7,6 +7,7 @@ import LoginRegister from "../views/LoginRegister.vue";
 import AddArticle from "../views/AddArticle.vue";
 import Profil from "../views/Profil.vue";
 import About from "../views/About.vue";
+import Contact from "../views/Contact.vue";
 import Admin from "../views/Admin.vue";
 import AdminUsers from "../views/AdminUsers.vue";
 import AdminCategories from "../views/AdminCategories.vue";
@@ -44,6 +45,11 @@ const routes = [
     path: "/about",
     name: "About",
     component: About,
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    component: Contact,
   },
   {
     path: "/profil",
