@@ -13,6 +13,7 @@ import AdminUsers from "../views/AdminUsers.vue";
 import AdminCategories from "../views/AdminCategories.vue";
 import AdminPosts from "../views/AdminPosts.vue";
 import AdminComments from "../views/AdminComments.vue";
+import MentionLegal from "../views/MentionLegal.vue";
 
 const routes = [
   {
@@ -91,6 +92,11 @@ const routes = [
     name: "AdminComments",
     component: AdminComments,
     meta: { requiresAdmin: true },
+  },
+  {
+    path: "/mentions-legales",
+    name: "MentionLegal",
+    component: MentionLegal,
   },
 ];
 
