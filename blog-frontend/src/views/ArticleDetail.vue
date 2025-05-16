@@ -47,6 +47,17 @@ import CommentList from "../components/comments/CommentList.vue";
         }}</span>
         — Auteur :
         <span class="italic">{{ post.author?.name || "Anonyme" }}</span>
+        <br />
+        Posté le :
+        <span class="text-gray-400 dark:text-wtext">
+          {{
+            new Date(post.createdAt).toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }}
+        </span>
       </div>
 
       <div
