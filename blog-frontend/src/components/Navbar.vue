@@ -82,12 +82,12 @@
         >
       </template>
       <RouterLink
-        to="#"
+        to="/about"
         class="block hover:underline text-wprimary dark:text-wtext"
         >À propos</RouterLink
       >
       <RouterLink
-        to="#"
+        to="/contact"
         class="block hover:underline text-wprimary dark:text-wtext"
         >Contact</RouterLink
       >
