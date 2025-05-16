@@ -5,7 +5,7 @@
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
       <!-- Logo et titre -->
       <img
-        src="../../public/assets/alttabw.png"
+        src="/assets/alttabw.png"
         alt=""
         class="h-12 w-12 rounded-full"
       />

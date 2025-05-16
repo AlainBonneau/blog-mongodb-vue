@@ -148,7 +148,7 @@ onMounted(() => {
       />
       <button
         @click="searchArticles"
-        class="bg-wprimary text-white px-4 py-2 rounded hover:opacity-90 transition"
+        class="bg-wprimary text-white px-4 py-2 rounded hover:opacity-90 transition cursor-pointer"
       >
         Rechercher
       </button>
@@ -170,6 +170,26 @@ onMounted(() => {
       >
         {{ cat.name }}
       </button>
+    </div>
+
+    <!-- Nombre d'article trouvé-->
+    <div class="mb-6">
+      <div v-if="articles.length" class="text-center text-gray-500 mb-6">
+        {{ articles.length }} article(s) trouvé(s)
+        <span v-if="selectedCategory">
+          dans la catégorie "{{
+            categories.find((cat) => cat.id === selectedCategory)?.name
+          }}"
+        </span>
+      </div>
+      <div v-else class="text-center text-gray-500 mb-6">
+        Aucun article trouvé
+        <span v-if="selectedCategory">
+          dans la catégorie "{{
+            categories.find((cat) => cat.id === selectedCategory)?.name
+          }}"
+        </span>
+      </div>
     </div>
 
     <!-- Liste des articles -->
