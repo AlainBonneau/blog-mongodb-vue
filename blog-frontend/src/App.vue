@@ -1,7 +1,11 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-whitebg dark:bg-blackbg text-gray-800 font-sans">
+  <div
+    class="min-h-screen flex flex-col bg-whitebg dark:bg-blackbg text-gray-800 font-sans"
+  >
     <Navbar />
-    <router-view class="flex-1" />
+    <main class="flex-1">
+      <router-view />
+    </main>
     <Footer />
     <Toast />
   </div>
