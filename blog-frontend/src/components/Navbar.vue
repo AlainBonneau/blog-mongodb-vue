@@ -22,7 +22,7 @@
           <RouterLink to="/admin" class="hover:underline">Admin</RouterLink>
         </template>
         <RouterLink to="/about" class="hover:underline">À propos</RouterLink>
-        <RouterLink to="#" class="hover:underline">Contact</RouterLink>
+        <RouterLink to="/contact" class="hover:underline">Contact</RouterLink>
       </nav>
 
       <!-- Actions (dark mode / login / logout) -->
