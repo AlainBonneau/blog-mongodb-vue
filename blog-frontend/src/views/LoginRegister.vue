@@ -79,10 +79,13 @@ import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import gql from "graphql-tag";
 import { useAuthStore } from "@/stores/auth.js";
+import validator from "email-validator";
 
 const router = useRouter();
 const auth = useAuthStore();
 const isLoginMode = ref(true);
+const attemptCount = ref(0);
+const lockUntil = ref(null);
 
 const form = ref({
   name: "",
@@ -116,6 +119,27 @@ const { mutate: register } = useMutation(REGISTER_MUTATION);
 // Fonction pour gérer la soumission du formulaire
 const handleSubmit = async () => {
   errorMessage.value = "";
+
+  const now = Date.now();
+  if (lockUntil.value && now < lockUntil.value) {
+    const remaining = Math.ceil((lockUntil.value - now) / 1000);
+    errorMessage.value = `Trop de tentatives. Réessaie dans ${remaining} secondes.`;
+    return;
+  }
+
+  if (!validator.validate(form.value.email)) {
+    errorMessage.value = "L'email n'est pas valide.";
+    return;
+  }
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  if (!isLoginMode.value && !passwordRegex.test(form.value.password)) {
+    errorMessage.value =
+      "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.";
+    return;
+  }
+
   try {
     if (isLoginMode.value) {
       const { data } = await login({
@@ -135,6 +159,11 @@ const handleSubmit = async () => {
     }
   } catch (err) {
     errorMessage.value = err.message;
+    attemptCount.value++;
+    if (attemptCount.value >= 5) {
+      lockUntil.value = Date.now() + 60000;
+      attemptCount.value = 0;
+    }
   }
 };
 </script>
