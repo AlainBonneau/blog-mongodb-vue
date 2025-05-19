@@ -158,7 +158,7 @@ onMounted(() => {
     <div class="mb-6 flex flex-wrap gap-2">
       <button
         @click="resetFilter"
-        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition"
+        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition cursor-pointer"
       >
         Toutes les catégories
       </button>
@@ -166,7 +166,7 @@ onMounted(() => {
         v-for="cat in categories"
         :key="cat.id"
         @click="selectCategory(cat.id)"
-        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition"
+        class="px-3 py-1 rounded border border-wprimary text-wprimary dark:text-wtext dark:border-wtext hover:bg-wprimary hover:text-white transition cursor-pointer"
       >
         {{ cat.name }}
       </button>
