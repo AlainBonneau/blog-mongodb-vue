@@ -131,15 +131,12 @@ const GET_ME = gql`
 
 const UPDATE_NAME = gql`
   mutation UpdateUserName($name: String!) {
-    updateUserName(newName: $name) {
-      token
-      user {
-        id
-        name
-        email
-        avatar
-        createdAt
-      }
+    updateUserName(name: $name) {
+      id
+      name
+      email
+      avatar
+      createdAt
     }
   }
 `;
