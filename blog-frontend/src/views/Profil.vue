@@ -106,6 +106,7 @@ import gql from "graphql-tag";
 import { useQuery } from "@vue/apollo-composable";
 import { useMutation } from "@vue/apollo-composable";
 import { useAuthStore } from "@/stores/auth";
+import { useToastStore } from "@/stores/toast";
 
 const auth = useAuthStore();
 const newName = ref(auth.user?.name || "");
@@ -116,6 +117,7 @@ const newPassword = ref("");
 const nameMessage = ref("");
 const passMessage = ref("");
 const passSuccess = ref(true);
+const toast = useToastStore();
 
 const GET_ME = gql`
   query Me {
@@ -168,8 +170,8 @@ async function updateName() {
     const { data } = await updateUserName({ name: newName.value });
     if (data?.updateUserName?.token) {
       auth.setToken(data.updateUserName.token); // Remplace le token pour avoir les infos à jour
-      nameMessage.value = "Nom mis à jour avec succès.";
     }
+    toast.showToast("Nom mis à jour avec succès.", "success");
   } catch (err) {
     nameMessage.value = "Erreur : " + err.message;
   }
@@ -185,6 +187,7 @@ async function updatePassword() {
     passMessage.value = "Mot de passe modifié.";
     oldPassword.value = "";
     newPassword.value = "";
+    toast.showToast("Mot de passe modifié avec succès.", "success");
   } catch (err) {
     passSuccess.value = false;
     passMessage.value = "Erreur : " + err.message;
