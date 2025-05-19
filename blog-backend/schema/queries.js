@@ -22,7 +22,7 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(PostType),
       args: { userId: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parent, args) {
-        return Post.find({ author: args.userId });
+        return Post.find({ author: args.userId }).sort({ createdAt: -1 });
       },
     },
 
@@ -50,7 +50,7 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(PostType),
       args: { categoryId: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(_, args) {
-        return Post.find({ category: args.categoryId });
+        return Post.find({ category: args.categoryId }).sort({ createdAt: -1 });
       },
     },
 
@@ -59,8 +59,8 @@ const RootQuery = new GraphQLObjectType({
       args: { keyword: { type: new GraphQLNonNull(GraphQLString) } },
       resolve(_, { keyword }) {
         const regex = new RegExp(keyword, "i");
-        return Post.find({
-          $or: [{ title: regex }, { content: regex }],
+        return Post.find({ $or: [{ title: regex }, { content: regex }] }).sort({
+          createdAt: -1,
         });
       },
     },
@@ -98,7 +98,7 @@ const RootQuery = new GraphQLObjectType({
     comments: {
       type: new GraphQLList(CommentType),
       resolve(parent, args) {
-        return Comment.find();
+        return Comment.find().sort({ createdAt: -1 });
       },
     },
 
