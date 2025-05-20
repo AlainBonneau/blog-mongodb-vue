@@ -24,7 +24,10 @@ const Mutation = new GraphQLObjectType({
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve(_, args) {
+      resolve(_, args, context) {
+        if (!context.user || context.user.role !== "admin") {
+          throw new Error("Non autorisé");
+        }
         const category = new Category({
           name: args.name,
         });
@@ -66,8 +69,7 @@ const Mutation = new GraphQLObjectType({
         const currentUser = await User.findById(context.user.userId);
         if (
           !currentUser ||
-          currentUser.role !== "auteur" &&
-          currentUser.role !== "admin"
+          (currentUser.role !== "auteur" && currentUser.role !== "admin")
         ) {
           throw new Error("Accès réservé aux auteurs et aux administrateurs");
         }
