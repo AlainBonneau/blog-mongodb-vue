@@ -92,7 +92,7 @@ import CommentList from "../components/comments/CommentList.vue";
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, watchEffect } from "vue-router";
 import { useQuery, useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { ref, computed } from "vue";
@@ -126,6 +126,12 @@ const GET_POST = gql`
 `;
 const { result, loading, error } = useQuery(GET_POST, { id: postId });
 const post = computed(() => result.value?.post || {});
+
+watchEffect(() => {
+  if (post.value) {
+    console.log("POST VALUE >>>", post.value);
+  }
+});
 
 // Get comments
 const GET_COMMENTS = gql`
