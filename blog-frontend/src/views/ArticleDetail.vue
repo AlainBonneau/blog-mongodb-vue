@@ -112,6 +112,7 @@ const GET_POST = gql`
       id
       title
       content
+      createdAt
       image
       category {
         name
