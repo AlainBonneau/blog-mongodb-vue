@@ -22,8 +22,7 @@
 
     <h2 class="text-2xl font-bold mt-8 mb-4">2. Hébergement</h2>
     <p class="mb-4">
-      Hébergeur : <strong>Vercel et Hostinger</strong><br />
-      Adresse : [Adresse de l’hébergeur]<br />
+      Hébergeur : <strong>Vercel, Hostinger et MongoDB</strong>
     </p>
 
     <h2 class="text-2xl font-bold mt-8 mb-4">3. Propriété intellectuelle</h2>
@@ -41,7 +40,8 @@
       uniquement utilisées pour répondre à vos demandes. Elles ne sont ni
       vendues, ni communiquées à des tiers. Vous disposez d'un droit d'accès, de
       rectification et de suppression de vos données en nous contactant à
-      <strong>[Ton Email]</strong>.
+      <strong><a href="/contact">Ici</a></strong
+      >.
     </p>
 
     <h2 class="text-2xl font-bold mt-8 mb-4">5. Cookies</h2>
@@ -63,7 +63,7 @@
     <h2 class="text-2xl font-bold mt-8 mb-4">7. Contact</h2>
     <p class="mb-4">
       Pour toute question, veuillez nous contacter via la page de contact
-      disponible sur le site. 
+      disponible sur le site.
     </p>
 
     <p class="mt-10 text-sm">
