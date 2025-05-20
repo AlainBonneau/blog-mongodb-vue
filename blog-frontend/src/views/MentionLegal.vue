@@ -12,13 +12,7 @@
     </p>
 
     <h2 class="text-2xl font-bold mt-8 mb-4">1. Éditeur du site</h2>
-    <p class="mb-4">
-      Propriétaire : <strong>SparckyDev</strong><br />
-      Contact :
-      <strong class="underline"
-        ><a href="https://alain-web.fr" target="_blank">Mon site</a></strong
-      ><br />
-    </p>
+    <p class="mb-4">Propriétaire : <strong>SparckyDev</strong><br /></p>
 
     <h2 class="text-2xl font-bold mt-8 mb-4">2. Hébergement</h2>
     <p class="mb-4">
