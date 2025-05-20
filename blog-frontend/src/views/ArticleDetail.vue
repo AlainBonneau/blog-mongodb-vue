@@ -94,7 +94,7 @@ import CommentList from "../components/comments/CommentList.vue";
 </template>
 
 <script setup>
-import { useRouter, useRoute, watchEffect } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useQuery, useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { ref, computed } from "vue";
