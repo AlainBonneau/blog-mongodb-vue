@@ -51,7 +51,7 @@ import CommentList from "../components/comments/CommentList.vue";
       </div>
 
       <div
-        class="prose dark:prose-invert max-w-none mb-10"
+        class="text-gray-800 dark:text-wtext leading-relaxed whitespace-pre-line break-words"
         v-html="htmlContent"
       ></div>
 
@@ -94,6 +94,11 @@ const route = useRoute();
 const postId = route.params.id;
 const auth = useAuthStore();
 const toast = useToastStore();
+
+marked.setOptions({
+  breaks: true,
+});
+
 const htmlContent = computed(() => marked(post.value.content || ""));
 
 // Get post
