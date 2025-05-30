@@ -13,7 +13,7 @@ import CommentList from "../components/comments/CommentList.vue";
 
     <article
       v-else
-      class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl"
+      class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl border border-gray-300 dark:border-gray-700"
     >
       <img
         v-if="post.image"
@@ -48,18 +48,6 @@ import CommentList from "../components/comments/CommentList.vue";
         — Auteur :
         <span class="italic">{{ post.author?.name || "Anonyme" }}</span>
         <br />
-        Posté le :
-        <span class="text-gray-400 dark:text-wtext">
-          {{
-            post.createdAt
-              ? new Date(post.createdAt).toLocaleDateString("fr-FR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })
-              : "Bientôt disponible"
-          }}
-        </span>
       </div>
 
       <div
@@ -114,7 +102,6 @@ const GET_POST = gql`
       id
       title
       content
-      createdAt
       image
       category {
         name
