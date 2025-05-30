@@ -51,10 +51,9 @@ import CommentList from "../components/comments/CommentList.vue";
       </div>
 
       <div
-        class="text-gray-800 dark:text-wtext leading-relaxed whitespace-pre-line mb-10"
-      >
-        {{ post.content }}
-      </div>
+        class="prose dark:prose-invert max-w-none mb-10"
+        v-html="htmlContent"
+      ></div>
 
       <!-- 💬 Commentaires -->
       <section>
@@ -88,12 +87,14 @@ import gql from "graphql-tag";
 import { ref, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useToastStore } from "@/stores/toast";
+import { marked } from "marked";
 
 const router = useRouter();
 const route = useRoute();
 const postId = route.params.id;
 const auth = useAuthStore();
 const toast = useToastStore();
+const htmlContent = computed(() => marked(post.value.content || ""));
 
 // Get post
 const GET_POST = gql`
