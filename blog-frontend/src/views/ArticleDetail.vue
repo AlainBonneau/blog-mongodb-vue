@@ -52,7 +52,7 @@ import CommentList from "../components/comments/CommentList.vue";
 
       <!-- Contenu Markdown amélioré -->
       <div
-        class="prose prose-lg dark:prose-invert max-w-none prose-headings:text-wprimary dark:prose-headings:text-wtext prose-p:text-gray-800 dark:prose-p:text-wtext prose-strong:text-wprimary dark:prose-strong:text-wtext prose-em:text-gray-700 dark:prose-em:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-wprimary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-ul:my-4 prose-ol:my-4 prose-li:my-2 prose-hr:border-gray-300 dark:prose-hr:border-gray-700 prose-table:border-collapse prose-table:w-full prose-table:my-6 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-3 prose-th:text-left prose-th:font-semibold prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-3"
+        class="prose prose-lg dark:prose-invert max-w-none prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-headings:text-wprimary dark:prose-headings:text-wtext prose-headings:font-bold prose-headings:mb-4 prose-headings:mt-6 prose-p:text-gray-800 dark:prose-p:text-wtext prose-p:mb-4 prose-strong:text-wprimary dark:prose-strong:text-wtext prose-em:text-gray-700 dark:prose-em:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-wprimary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-4 prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-4 prose-ul:my-4 prose-ul:ml-0 prose-ol:my-4 prose-ol:ml-0 prose-li:my-1 prose-li:text-gray-800 dark:prose-li:text-wtext prose-hr:border-gray-300 dark:prose-hr:border-gray-700 prose-hr:my-8 prose-table:border-collapse prose-table:w-full prose-table:my-6 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-3 prose-th:text-left prose-th:font-semibold prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-3"
         v-html="htmlContent"
       ></div>
 
@@ -111,6 +111,7 @@ marked.setOptions({
   smartLists: true,
   smartypants: true, // Typographie intelligente
   xhtml: false,
+  tables: true, // Important pour les tableaux
 });
 
 // Renderer personnalisé pour des améliorations
@@ -129,14 +130,12 @@ renderer.link = (href, title, text) => {
   return `<a href="${href}"${titleAttr}${target}>${text}</a>`;
 };
 
-// Code blocks avec classes pour le highlighting (correction du bug)
-renderer.code = (code, language) => {
-  // S'assurer que code est une string
-  const codeContent = typeof code === "string" ? code : String(code);
-  const validLanguage =
-    language &&
-    typeof language === "string" &&
-    language.match(/^[a-zA-Z0-9_-]+$/);
+// Code blocks avec la nouvelle API Marked v5+
+renderer.code = (token) => {
+  console.log("Code token:", token);
+  const codeContent = token.text || "";
+  const language = token.lang || "";
+  const validLanguage = language && language.match(/^[a-zA-Z0-9_-]+$/);
   const langClass = validLanguage ? ` class="language-${language}"` : "";
 
   // Échapper le HTML dans le code
@@ -150,23 +149,36 @@ renderer.code = (code, language) => {
   return `<pre><code${langClass}>${escapedCode}</code></pre>`;
 };
 
-// Améliorer le rendu des tableaux
-renderer.table = (header, body) => {
+// Tableaux avec la nouvelle API Marked v5+
+renderer.table = (token) => {
+  console.log("Table token:", token);
+
+  // Header : array direct de cells
+  const headerRow = token.header
+    ? `<tr>${token.header
+        .map((cell) => `<th>${cell.text || ""}</th>`)
+        .join("")}</tr>`
+    : "";
+
+  // Rows : array de arrays de cells
+  const bodyRows = token.rows
+    ? token.rows
+        .map(
+          (row) =>
+            `<tr>${row
+              .map((cell) => `<td>${cell.text || ""}</td>`)
+              .join("")}</tr>`
+        )
+        .join("")
+    : "";
+
   return `<table class="w-full border-collapse my-6">
-    <thead>${header}</thead>
-    <tbody>${body}</tbody>
+    <thead>${headerRow}</thead>
+    <tbody>${bodyRows}</tbody>
   </table>`;
 };
 
-renderer.tablerow = (content) => {
-  return `<tr>${content}</tr>`;
-};
-
-renderer.tablecell = (content, flags) => {
-  const tag = flags.header ? "th" : "td";
-  const align = flags.align ? ` style="text-align: ${flags.align}"` : "";
-  return `<${tag}${align}>${content}</${tag}>`;
-};
+// Supprimer les anciens renderers tablerow et tablecell qui ne sont plus nécessaires
 
 marked.use({ renderer });
 
@@ -178,7 +190,10 @@ const htmlContent = computed(() => {
     // Conversion Markdown vers HTML
     const rawHtml = marked(post.value.content);
 
-    // Sanitisation avec DOMPurify
+    // DEBUG: Afficher le HTML brut dans la console
+    console.log("HTML brut de marked:", rawHtml);
+
+    // Sanitisation avec DOMPurify (plus permissive pour debug)
     const cleanHtml = DOMPurify.sanitize(rawHtml, {
       ALLOWED_TAGS: [
         "h1",
@@ -230,6 +245,9 @@ const htmlContent = computed(() => {
       ],
       ALLOW_DATA_ATTR: false,
     });
+
+    // DEBUG: Afficher le HTML nettoyé
+    console.log("HTML après DOMPurify:", cleanHtml);
 
     return cleanHtml;
   } catch (error) {
