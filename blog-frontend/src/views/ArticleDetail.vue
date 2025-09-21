@@ -21,6 +21,7 @@ import CommentList from "../components/comments/CommentList.vue";
         :alt="post.title"
         class="w-full h-64 object-cover rounded-lg mb-6"
       />
+
       <div
         v-if="
           auth.user &&
@@ -32,7 +33,7 @@ import CommentList from "../components/comments/CommentList.vue";
           @click="handleDelete"
           class="px-4 py-2 mb-4 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer"
         >
-          Supprimer l’article
+          Supprimer l'article
         </button>
       </div>
 
@@ -40,23 +41,23 @@ import CommentList from "../components/comments/CommentList.vue";
         {{ post.title }}
       </h1>
 
-      <div class="text-sm text-gray-600 dark:text-wtext mb-4">
+      <div class="text-sm text-gray-600 dark:text-wtext mb-6">
         Catégorie :
         <span class="font-semibold">{{
           post.category?.name || "Non spécifiée"
         }}</span>
         — Auteur :
         <span class="italic">{{ post.author?.name || "Anonyme" }}</span>
-        <br />
       </div>
 
+      <!-- Contenu Markdown amélioré -->
       <div
-        class="text-gray-800 dark:text-wtext leading-relaxed whitespace-pre-line break-words"
+        class="prose prose-lg dark:prose-invert max-w-none prose-headings:text-wprimary dark:prose-headings:text-wtext prose-p:text-gray-800 dark:prose-p:text-wtext prose-strong:text-wprimary dark:prose-strong:text-wtext prose-em:text-gray-700 dark:prose-em:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-wprimary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-ul:my-4 prose-ol:my-4 prose-li:my-2 prose-hr:border-gray-300 dark:prose-hr:border-gray-700 prose-table:border-collapse prose-table:w-full prose-table:my-6 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:p-3 prose-th:text-left prose-th:font-semibold prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:p-3"
         v-html="htmlContent"
       ></div>
 
       <!-- 💬 Commentaires -->
-      <section>
+      <section class="mt-12">
         <CommentList
           :comments="comments"
           :auth="auth"
@@ -74,7 +75,9 @@ import CommentList from "../components/comments/CommentList.vue";
           @update:text="commentText = $event"
           @submit="handleAddComment"
         />
-        <p v-else class="text-sm text-gray-600">Connecte-toi pour commenter.</p>
+        <p v-else class="text-sm text-gray-600 mt-4">
+          Connecte-toi pour commenter.
+        </p>
       </section>
     </article>
   </section>
@@ -88,6 +91,7 @@ import { ref, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useToastStore } from "@/stores/toast";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const router = useRouter();
 const route = useRoute();
@@ -95,11 +99,144 @@ const postId = route.params.id;
 const auth = useAuthStore();
 const toast = useToastStore();
 
+// Configuration améliorée de marked
 marked.setOptions({
   breaks: true,
+  gfm: true, // GitHub Flavored Markdown
+  headerIds: true,
+  mangle: false,
+  pedantic: false,
+  sanitize: false, // On utilise DOMPurify à la place
+  silent: false,
+  smartLists: true,
+  smartypants: true, // Typographie intelligente
+  xhtml: false,
 });
 
-const htmlContent = computed(() => marked(post.value.content || ""));
+// Renderer personnalisé pour des améliorations
+const renderer = new marked.Renderer();
+
+// Liens externes s'ouvrent dans un nouvel onglet
+renderer.link = (href, title, text) => {
+  // Vérification que href est une string valide
+  if (!href || typeof href !== "string") {
+    href = "#";
+  }
+
+  const isExternal = href && !href.startsWith("/") && !href.startsWith("#");
+  const target = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
+  const titleAttr = title ? ` title="${title}"` : "";
+  return `<a href="${href}"${titleAttr}${target}>${text}</a>`;
+};
+
+// Code blocks avec classes pour le highlighting (correction du bug)
+renderer.code = (code, language) => {
+  // S'assurer que code est une string
+  const codeContent = typeof code === "string" ? code : String(code);
+  const validLanguage =
+    language &&
+    typeof language === "string" &&
+    language.match(/^[a-zA-Z0-9_-]+$/);
+  const langClass = validLanguage ? ` class="language-${language}"` : "";
+
+  // Échapper le HTML dans le code
+  const escapedCode = codeContent
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+  return `<pre><code${langClass}>${escapedCode}</code></pre>`;
+};
+
+// Améliorer le rendu des tableaux
+renderer.table = (header, body) => {
+  return `<table class="w-full border-collapse my-6">
+    <thead>${header}</thead>
+    <tbody>${body}</tbody>
+  </table>`;
+};
+
+renderer.tablerow = (content) => {
+  return `<tr>${content}</tr>`;
+};
+
+renderer.tablecell = (content, flags) => {
+  const tag = flags.header ? "th" : "td";
+  const align = flags.align ? ` style="text-align: ${flags.align}"` : "";
+  return `<${tag}${align}>${content}</${tag}>`;
+};
+
+marked.use({ renderer });
+
+// Contenu HTML traité avec DOMPurify
+const htmlContent = computed(() => {
+  if (!post.value.content) return "";
+
+  try {
+    // Conversion Markdown vers HTML
+    const rawHtml = marked(post.value.content);
+
+    // Sanitisation avec DOMPurify
+    const cleanHtml = DOMPurify.sanitize(rawHtml, {
+      ALLOWED_TAGS: [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "p",
+        "br",
+        "strong",
+        "em",
+        "u",
+        "del",
+        "s",
+        "a",
+        "img",
+        "video",
+        "audio",
+        "ul",
+        "ol",
+        "li",
+        "blockquote",
+        "pre",
+        "code",
+        "table",
+        "thead",
+        "tbody",
+        "tr",
+        "th",
+        "td",
+        "hr",
+        "div",
+        "span",
+      ],
+      ALLOWED_ATTR: [
+        "href",
+        "src",
+        "alt",
+        "title",
+        "class",
+        "target",
+        "rel",
+        "id",
+        "style",
+        "controls",
+        "width",
+        "height",
+      ],
+      ALLOW_DATA_ATTR: false,
+    });
+
+    return cleanHtml;
+  } catch (error) {
+    console.error("Erreur lors du rendu Markdown:", error);
+    return "<p>Erreur lors du rendu du contenu</p>";
+  }
+});
 
 // Get post
 const GET_POST = gql`
