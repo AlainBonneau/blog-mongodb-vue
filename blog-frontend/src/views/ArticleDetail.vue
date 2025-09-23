@@ -8,7 +8,7 @@
 
     <article
       v-else
-      class="bg-whitebg dark:bg-blackbg p-8 rounded-xl shadow-2xl border border-gray-300 dark:border-gray-700"
+      class="bg-whitebg dark:bg-bprimary p-8 rounded-xl shadow-2xl border border-gray-300 dark:border-gray-700"
     >
       <!-- Image de l'article -->
       <img

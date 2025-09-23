@@ -8,7 +8,7 @@
     />
     <button
       @click="$emit('submit')"
-      class="bg-wprimary dark:bg-bprimary text-white px-4 py-3 rounded-lg shadow hover:bg-blue-900 cursor-pointer transition duration-300"
+      class="bg-wprimary dark:bg-blackbg text-white px-4 py-3 rounded-lg shadow hover:bg-blue-900 cursor-pointer transition duration-300"
     >
       Envoyer
     </button>
