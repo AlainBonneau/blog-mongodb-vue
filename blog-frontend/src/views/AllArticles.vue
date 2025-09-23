@@ -148,7 +148,7 @@ onMounted(() => {
       />
       <button
         @click="searchArticles"
-        class="bg-wprimary text-white px-4 py-2 rounded hover:opacity-90 transition cursor-pointer"
+        class="bg-wprimary text-white font-semibold px-4 py-2 rounded dark:bg-white dark:text-black cursor-pointer"
       >
         Rechercher
       </button>
