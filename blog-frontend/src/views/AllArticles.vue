@@ -212,13 +212,13 @@ onMounted(() => {
       <button
         @click="page > 1 && page--"
         :disabled="page <= 1"
-        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded disabled:opacity-50"
+        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
       >
         Précédent
       </button>
       <button
         @click="page++"
-        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded"
+        class="bg-wprimary dark:bg-bprimary text-white px-4 py-2 rounded cursor-pointer"
       >
         Suivant
       </button>
